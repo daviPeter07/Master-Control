@@ -90,8 +90,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                   <p class="text-sm text-[var(--color-text-secondary)]">Telefone: <?= htmlspecialchars($cliente['telefone']) ?></p>
                   <p class="text-sm text-[var(--color-text-secondary)]">Cliente desde: <?= date('d/m/Y', strtotime($cliente['criado_em'])) ?></p>
                   <div class="flex gap-2 mt-2">
-                    <a href="#" class="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-blue-600">Editar</a>
-                    <a href="#" class="bg-red-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-red-600">Deletar</a>
+                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs" data-id="<?= $cliente['id'] ?>" data-nome="<?= htmlspecialchars($cliente['nome']) ?>" data-tipo="<?= $cliente['tipo_cliente'] ?>" data-telefone="<?= htmlspecialchars($cliente['telefone']) ?>">Editar</button>
+                    <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs" data-id="<?= $cliente['id'] ?>" data-nome="<?= htmlspecialchars($cliente['nome']) ?>">Deletar</button>
                   </div>
                 </div>
               <?php endforeach; ?>
