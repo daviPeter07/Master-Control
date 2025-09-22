@@ -17,12 +17,13 @@ $totalPagas = count(array_filter($ultimasVendas, fn($v) => $v['status'] === 'Pag
 $totalPendentes = count(array_filter($ultimasVendas, fn($v) => $v['status'] === 'Pendente'));
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light-blue">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Master Control</title>
+  <script src="../../scripts/theme.js"></script>
   <link rel="stylesheet" href="../../styles/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -81,7 +82,7 @@ $totalPendentes = count(array_filter($ultimasVendas, fn($v) => $v['status'] === 
 
         <!-- Últimas vendas -->
         <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
-          <h2 class="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)] mb-3 sm:mb-4">Últimas Vendas</h2>
+          <h2 class="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)] mb-3 sm:mb-4">Últimas 5 Vendas</h2>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm sm:text-base">
               <thead>
@@ -117,7 +118,9 @@ $totalPendentes = count(array_filter($ultimasVendas, fn($v) => $v['status'] === 
     </div>
   </div>
 
-  <script src="../../scripts/dashboard.js"></script>
+  <script src="../../scripts/dashboard.js">
+
+  </script>
 </body>
 
 </html>

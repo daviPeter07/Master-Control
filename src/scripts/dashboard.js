@@ -148,6 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const items = [...tables, ...grids];
 
       items.forEach((item) => {
+        // Pega o conteúdo do primeiro e segundo elemento relevante para comparar
         const nome = normalizeText(
           item.querySelector("td:first-child, h2")?.textContent || ""
         );
