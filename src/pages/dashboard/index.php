@@ -1,5 +1,6 @@
 <?php
 require_once '../../includes/auth_check.php';
+$currentPage = "inicio";
 
 //mockdata
 $ultimasVendas = [
@@ -15,7 +16,7 @@ $ultimasVendas = [
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale-1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Master Control</title>
   <link rel="stylesheet" href="../../styles/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -34,45 +35,47 @@ $ultimasVendas = [
     <div class="flex-1">
       <?php require_once '../../includes/components/header.php'; ?>
 
-      <main class="p-4 md:p-8 transition-all duration-300 lg:ml-64 group-[.sidebar-closed]:lg:ml-0">
-        <h1 class="text-3xl font-bold text-[var(--color-text-primary)] mb-8">
+      <main class="p-3 sm:p-6 transition-all duration-300 lg:ml-64 group-[.sidebar-closed]:lg:ml-0">
+        <h1 class="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] mb-6 sm:mb-8">
           Olá, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!
         </h1>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <div class="bg-[var(--color-surface)] p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold text-[var(--color-text-primary)] mb-4">Vendas nos Últimos 7 Dias</h2>
-            <div>
+        <!-- Gráficos -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-6 sm:mb-8">
+          <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
+            <h2 class="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)] mb-3 sm:mb-4">Vendas nos Últimos 7 Dias</h2>
+            <div class="w-full overflow-x-auto">
               <canvas id="vendasPorDiaChart"></canvas>
             </div>
           </div>
-          <div class="bg-[var(--color-surface)] p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-semibold text-[var(--color-text-primary)] mb-4">Vendas por Status</h2>
-            <div class="max-w-xs mx-auto">
+          <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
+            <h2 class="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)] mb-3 sm:mb-4">Vendas por Status</h2>
+            <div class="max-w-[200px] sm:max-w-xs mx-auto">
               <canvas id="vendasPorStatusChart"></canvas>
             </div>
           </div>
         </div>
 
-        <div class="bg-[var(--color-surface)] p-6 rounded-lg shadow-md">
-          <h2 class="text-xl font-semibold text-[var(--color-text-primary)] mb-4">Últimas Vendas</h2>
+        <!-- Últimas vendas -->
+        <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
+          <h2 class="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)] mb-3 sm:mb-4">Últimas Vendas</h2>
           <div class="overflow-x-auto">
-            <table class="w-full text-left">
+            <table class="w-full text-left text-sm sm:text-base">
               <thead>
                 <tr class="border-b border-[var(--color-border)]">
-                  <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Produto</th>
-                  <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Cliente</th>
-                  <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Data</th>
-                  <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Status</th>
+                  <th class="p-2 sm:p-3 font-semibold text-[var(--color-text-secondary)]">Produto</th>
+                  <th class="p-2 sm:p-3 font-semibold text-[var(--color-text-secondary)] hidden xs:table-cell">Cliente</th>
+                  <th class="p-2 sm:p-3 font-semibold text-[var(--color-text-secondary)] hidden sm:table-cell">Data</th>
+                  <th class="p-2 sm:p-3 font-semibold text-[var(--color-text-secondary)]">Status</th>
                 </tr>
               </thead>
               <tbody>
                 <?php foreach ($ultimasVendas as $venda): ?>
                   <tr class="border-b border-[var(--color-border)]">
-                    <td class="p-3 text-[var(--color-text-primary)] font-medium"><?php echo htmlspecialchars($venda['produto']); ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]"><?php echo htmlspecialchars($venda['cliente']); ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]"><?php echo htmlspecialchars($venda['data']); ?></td>
-                    <td class="p-3">
+                    <td class="p-2 sm:p-3 text-[var(--color-text-primary)] font-medium"><?php echo htmlspecialchars($venda['produto']); ?></td>
+                    <td class="p-2 sm:p-3 text-[var(--color-text-secondary)] hidden xs:table-cell"><?php echo htmlspecialchars($venda['cliente']); ?></td>
+                    <td class="p-2 sm:p-3 text-[var(--color-text-secondary)] hidden sm:table-cell"><?php echo htmlspecialchars($venda['data']); ?></td>
+                    <td class="p-2 sm:p-3">
                       <?php if ($venda['status'] === 'Pago'): ?>
                         <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Pago</span>
                       <?php else: ?>

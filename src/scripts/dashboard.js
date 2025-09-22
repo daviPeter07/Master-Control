@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const vendasPorDiaCtx = document.getElementById("vendasPorDiaChart");
   const vendasPorStatusCtx = document.getElementById("vendasPorStatusChart");
 
-  // Gráfico de Barras: Vendas por Dia
+  // ======== Gráfico de Barras: Vendas por Dia ========
   if (vendasPorDiaCtx) {
     new Chart(vendasPorDiaCtx, {
       type: "bar",
@@ -23,16 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       options: {
         responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
+        scales: { y: { beginAtZero: true } },
       },
     });
   }
 
-  // Gráfico de Rosca (Doughnut): Vendas por Status
+  // ======== Gráfico de Rosca: Vendas por Status ========
   if (vendasPorStatusCtx) {
     new Chart(vendasPorStatusCtx, {
       type: "doughnut",
@@ -51,14 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         ],
       },
-      options: {
-        responsive: true,
-      },
+      options: { responsive: true },
     });
   }
 
+  // ======== Sidebar Toggle ========
   const applySidebarState = () => {
-    // Para telas pequenas, sempre comece fechado. Para telas grandes, use o estado salvo.
     if (window.innerWidth < 1024) {
       body.classList.add("sidebar-closed");
     } else if (localStorage.getItem("sidebarState") === "closed") {
@@ -70,12 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (hamburgerButton) {
     hamburgerButton.addEventListener("click", () => {
       body.classList.toggle("sidebar-closed");
-      // Salva a preferência do usuário
-      if (body.classList.contains("sidebar-closed")) {
-        localStorage.setItem("sidebarState", "closed");
-      } else {
-        localStorage.setItem("sidebarState", "open");
-      }
+      localStorage.setItem(
+        "sidebarState",
+        body.classList.contains("sidebar-closed") ? "closed" : "open"
+      );
     });
   }
 
@@ -86,23 +78,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const themeSwitcher = document.getElementById("theme-switcher");
+  // ======== Theme Switcher Customizado ========
   const htmlElement = document.documentElement;
+  const themeButton = document.getElementById("theme-button");
+  const themeOptions = document.getElementById("theme-options");
+  const themeBtns = themeOptions
+    ? themeOptions.querySelectorAll("button[data-theme]")
+    : [];
 
-  const applyTheme = () => {
-    const savedTheme = localStorage.getItem("theme") || "light-blue";
-    htmlElement.setAttribute("data-theme", savedTheme);
-    if (themeSwitcher) {
-      themeSwitcher.value = savedTheme;
-    }
-  };
-  applyTheme();
+  // Aplica tema salvo
+  const savedTheme = localStorage.getItem("theme") || "light-blue";
+  htmlElement.setAttribute("data-theme", savedTheme);
+  if (themeButton) {
+    const mainSpan = themeButton.querySelector("span");
+    if (mainSpan) mainSpan.className = getThemeSpanClass(savedTheme);
+  }
 
-  if (themeSwitcher) {
-    themeSwitcher.addEventListener("change", () => {
-      const selectedTheme = themeSwitcher.value;
+  // Toggle dropdown
+  if (themeButton && themeOptions) {
+    themeButton.addEventListener("click", () => {
+      themeOptions.classList.toggle("hidden");
+    });
+  }
+
+  // Seleção de tema
+  themeBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const selectedTheme = btn.dataset.theme;
       htmlElement.setAttribute("data-theme", selectedTheme);
       localStorage.setItem("theme", selectedTheme);
+      themeOptions.classList.add("hidden");
+
+      // Atualiza bolinha do botão principal
+      const mainSpan = themeButton.querySelector("span");
+      if (mainSpan) mainSpan.className = getThemeSpanClass(selectedTheme);
     });
+  });
+
+  // Fecha dropdown clicando fora
+  document.addEventListener("click", (e) => {
+    if (!themeButton.contains(e.target) && !themeOptions.contains(e.target)) {
+      themeOptions.classList.add("hidden");
+    }
+  });
+
+  // ======== Função utilitária para cores da bolinha principal ========
+  function getThemeSpanClass(theme) {
+    if (theme.includes("blue"))
+      return `w-4 h-4 rounded-full ${
+        theme.startsWith("light") ? "bg-blue-400" : "bg-blue-800"
+      }`;
+    if (theme.includes("pink"))
+      return `w-4 h-4 rounded-full ${
+        theme.startsWith("light") ? "bg-pink-400" : "bg-pink-800"
+      }`;
+    if (theme.includes("orange"))
+      return `w-4 h-4 rounded-full ${
+        theme.startsWith("light") ? "bg-orange-400" : "bg-orange-800"
+      }`;
+    return "w-4 h-4 rounded-full bg-blue-400";
   }
 });

@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if (empty($email) || empty($password)) {
     $_SESSION['error_message'] = "Email e senha são obrigatórios.";
-    header("Location: ../auth/login/");
+    header("Location: /masterControl/src/auth/login/index.php");
     exit();
   }
 
@@ -31,16 +31,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['user_name'] = $user['nome'];
 
-    header("Location: ../pages/dashboard/");
+    header("Location: /masterControl/src/pages/dashboard");
     exit();
   } else {
 
     $_SESSION['error_message'] = "Email ou senha inválidos.";
 
-    header("Location: ../auth/login/");
+    header("Location: /masterControl/src/auth/login/index.php");
     exit();
   }
 } else {
-  header("Location: ../auth/login/");
+  header("Location: /masterControl/src/auth/login/index.php");
   exit();
 }
