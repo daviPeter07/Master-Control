@@ -58,6 +58,17 @@
       </svg>
       <span class="truncate">Contas</span>
     </a>
+
+    <a href="../../pages/dashboard/vendas.php"
+      class="flex items-center gap-2 py-2 px-2 rounded-md transition-colors font-medium
+              <?php echo (isset($currentPage) && $currentPage === 'vendas')
+                ? 'bg-[var(--color-primary)] text-white font-semibold'
+                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-primary)] hover:text-white'; ?>">
+      <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M4 10.781c.148..." />
+      </svg>
+      <span class="truncate">Vendas</span>
+    </a>
   </nav>
 
   <!-- Logout -->

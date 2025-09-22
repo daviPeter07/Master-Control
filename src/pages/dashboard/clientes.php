@@ -4,12 +4,13 @@ $currentPage = 'clientes';
 
 // mockdata de clientes
 $clientes = [
-  ['id' => 1, 'nome' => 'João Silva', 'tipo_cliente' => 'Consumidor', 'telefone' => '(92) 99999-1111', 'criado_em' => '2025-09-01'],
-  ['id' => 2, 'nome' => 'Maria Souza', 'tipo_cliente' => 'Revendedor', 'telefone' => '(92) 98888-2222', 'criado_em' => '2025-09-05'],
-  ['id' => 3, 'nome' => 'Carlos Lima', 'tipo_cliente' => 'Consumidor', 'telefone' => '(92) 97777-3333', 'criado_em' => '2025-09-10'],
-  ['id' => 4, 'nome' => 'Ana Pereira', 'tipo_cliente' => 'Revendedor', 'telefone' => '(92) 96666-4444', 'criado_em' => '2025-09-12'],
-  ['id' => 5, 'nome' => 'Pedro Alves', 'tipo_cliente' => 'Consumidor', 'telefone' => '(92) 95555-5555', 'criado_em' => '2025-09-15'],
+  ['id' => 1, 'nome' => 'João Silva', 'tipo_cliente' => 'CONSUMIDOR', 'telefone' => '(92) 99999-1111', 'criado_em' => '2025-09-01'],
+  ['id' => 2, 'nome' => 'Maria Souza', 'tipo_cliente' => 'REVENDEDORA', 'telefone' => '(92) 98888-2222', 'criado_em' => '2025-09-05'],
+  ['id' => 3, 'nome' => 'Carlos Lima', 'tipo_cliente' => 'CONSUMIDOR', 'telefone' => '(92) 97777-3333', 'criado_em' => '2025-09-10'],
+  ['id' => 4, 'nome' => 'Ana Pereira', 'tipo_cliente' => 'REVENDEDORA', 'telefone' => '(92) 96666-4444', 'criado_em' => '2025-09-12'],
+  ['id' => 5, 'nome' => 'Pedro Alves', 'tipo_cliente' => 'CONSUMIDOR', 'telefone' => '(92) 95555-5555', 'criado_em' => '2025-09-15'],
 ];
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="light-blue">
@@ -45,7 +46,7 @@ $clientes = [
         </div>
 
         <div class="mb-6">
-          <input type="search" placeholder="Pesquisar por nome do cliente..."
+          <input type="search" placeholder="Pesquisar por cliente..."
             class="w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 

@@ -2,24 +2,18 @@
 require_once '../../includes/auth_check.php';
 $currentPage = 'contas';
 
-// mockdata clientes e usuários
+// mockdata clientes
 $clientes = [
   1 => 'João Silva',
   2 => 'Maria Souza',
   3 => 'Carlos Lima',
 ];
 
-$usuarios = [
-  1 => 'Admin',
-  2 => 'Vendedor 1',
-  3 => 'Vendedor 2',
-];
-
 // mockdata contas a receber
 $contas = [
-  ['id' => 1, 'cliente_id' => 1, 'usuario_id' => 2, 'valor_total' => 150.00, 'metodo_pagamento' => 'Cartão', 'status_pagamento' => 'Pago', 'data_venda' => '2025-09-01'],
-  ['id' => 2, 'cliente_id' => 2, 'usuario_id' => 1, 'valor_total' => 300.00, 'metodo_pagamento' => 'Boleto', 'status_pagamento' => 'Pendente', 'data_venda' => '2025-09-05'],
-  ['id' => 3, 'cliente_id' => 3, 'usuario_id' => 3, 'valor_total' => 75.50, 'metodo_pagamento' => 'Pix', 'status_pagamento' => 'Pago', 'data_venda' => '2025-09-10'],
+  ['id' => 1, 'cliente_id' => 1, 'valor_total' => 150.00, 'metodo_pagamento' => 'Cartão', 'status_pagamento' => 'Pago', 'data_venda' => '2025-09-01'],
+  ['id' => 2, 'cliente_id' => 2, 'valor_total' => 300.00, 'metodo_pagamento' => 'Boleto', 'status_pagamento' => 'Pendente', 'data_venda' => '2025-09-05'],
+  ['id' => 3, 'cliente_id' => 3, 'valor_total' => 75.50, 'metodo_pagamento' => 'Pix', 'status_pagamento' => 'Pago', 'data_venda' => '2025-09-10'],
 ];
 ?>
 <!DOCTYPE html>
@@ -67,7 +61,6 @@ $contas = [
             <?php foreach ($contas as $conta): ?>
               <div class="p-4 border border-[var(--color-border)] rounded-lg">
                 <h2 class="font-semibold text-[var(--color-text-primary)]"><?php echo htmlspecialchars($clientes[$conta['cliente_id']]); ?></h2>
-                <p class="text-sm text-[var(--color-text-secondary)]">Usuário: <?php echo htmlspecialchars($usuarios[$conta['usuario_id']]); ?></p>
                 <p class="text-sm text-[var(--color-text-secondary)]">Valor Total: R$ <?php echo number_format($conta['valor_total'], 2, ',', '.'); ?></p>
                 <p class="text-sm text-[var(--color-text-secondary)]">Método: <?php echo htmlspecialchars($conta['metodo_pagamento']); ?></p>
                 <p class="text-sm text-[var(--color-text-secondary)]">Status: <?php echo htmlspecialchars($conta['status_pagamento']); ?></p>
@@ -86,7 +79,6 @@ $contas = [
               <thead>
                 <tr class="border-b border-[var(--color-border)]">
                   <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Cliente</th>
-                  <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Usuário</th>
                   <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Valor Total</th>
                   <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Método</th>
                   <th class="p-3 text-sm font-semibold text-[var(--color-text-secondary)]">Status</th>
@@ -98,7 +90,6 @@ $contas = [
                 <?php foreach ($contas as $conta): ?>
                   <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)]">
                     <td class="p-3 font-medium text-[var(--color-text-primary)]"><?php echo htmlspecialchars($clientes[$conta['cliente_id']]); ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]"><?php echo htmlspecialchars($usuarios[$conta['usuario_id']]); ?></td>
                     <td class="p-3 text-[var(--color-text-secondary)]">R$ <?php echo number_format($conta['valor_total'], 2, ',', '.'); ?></td>
                     <td class="p-3 text-[var(--color-text-secondary)]"><?php echo htmlspecialchars($conta['metodo_pagamento']); ?></td>
                     <td class="p-3 text-[var(--color-text-secondary)]"><?php echo htmlspecialchars($conta['status_pagamento']); ?></td>
