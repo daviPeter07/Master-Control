@@ -1,24 +1,53 @@
 <?php
 require_once '../../includes/auth_check.php';
+require_once '../../../database/index.php';
 $currentPage = 'produtos';
 
-// mockdata
-$produtos = [
-  ['id' => 1, 'nome' => 'Base Líquida Matte', 'descricao' => 'Base de longa duração com acabamento matte.', 'valor_custo' => 25.00, 'valor_venda' => 59.90, 'quantidade' => 100, 'genero' => 'FEM', 'marca' => 'BeautyPro', 'categoria' => 'Maquiagem'],
-  ['id' => 2, 'nome' => 'Hidratante Facial', 'descricao' => 'Creme hidratante com vitaminas para nutrir a pele.', 'valor_custo' => 15.00, 'valor_venda' => 49.90, 'quantidade' => 80, 'genero' => 'UNISSEX', 'marca' => 'GlowSkin', 'categoria' => 'Skincare'],
-  ['id' => 3, 'nome' => 'Batom Líquido Matte', 'descricao' => 'Batom de alta pigmentação, resistente.', 'valor_custo' => 12.00, 'valor_venda' => 39.90, 'quantidade' => 150, 'genero' => 'FEM', 'marca' => 'LipLuxe', 'categoria' => 'Maquiagem'],
-  ['id' => 4, 'nome' => 'Shampoo Nutritivo', 'descricao' => 'Fortalece e hidrata os fios com ingredientes naturais.', 'valor_custo' => 18.00, 'valor_venda' => 45.00, 'quantidade' => 60, 'genero' => 'UNISSEX', 'marca' => 'HairCare', 'categoria' => 'Cabelo'],
-  ['id' => 5, 'nome' => 'Máscara de Argila', 'descricao' => 'Máscara purificante que controla a oleosidade.', 'valor_custo' => 10.00, 'valor_venda' => 29.90, 'quantidade' => 70, 'genero' => 'UNISSEX', 'marca' => 'SkinEssence', 'categoria' => 'Skincare'],
-  ['id' => 6, 'nome' => 'Perfume Floral', 'descricao' => 'Fragrância suave e duradoura para o dia a dia.', 'valor_custo' => 45.00, 'valor_venda' => 129.90, 'quantidade' => 40, 'genero' => 'FEM', 'marca' => 'Scent & Co.', 'categoria' => 'Perfumaria'],
-  ['id' => 7, 'nome' => 'Protetor Solar FPS 50', 'descricao' => 'Proteção alta contra raios UVA e UVB, toque seco.', 'valor_custo' => 22.00, 'valor_venda' => 55.00, 'quantidade' => 90, 'genero' => 'UNISSEX', 'marca' => 'SunSafe', 'categoria' => 'Skincare'],
-];
+// Lógica de Paginação com o Banco de Dados
 
+// Definir itens por página
 $itensPorPagina = 5;
-$totalProdutos = count($produtos);
-$totalPaginas = ceil($totalProdutos / $itensPorPagina);
-$paginaAtual = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
+
+// Contar o total de produtos no banco
+$totalProdutosSql = "SELECT COUNT(id) AS total FROM produtos";
+$totalResult = mysqli_query($conexao, $totalProdutosSql);
+$totalProdutos = mysqli_fetch_assoc($totalResult)['total'];
+$totalPaginas = $totalProdutos > 0 ? ceil($totalProdutos / $itensPorPagina) : 1;
+
+// Obter e validar a página atual
+$paginaAtual = isset($_GET['pagina']) ? max(1, min((int)$_GET['pagina'], $totalPaginas)) : 1;
+
+// Calcular o offset para a query
 $inicio = ($paginaAtual - 1) * $itensPorPagina;
-$produtosPagina = array_slice($produtos, $inicio, $itensPorPagina);
+
+// Query para buscar os produtos da página, juntando com marcas e categorias
+// Usamos LEFT JOIN para garantir que produtos apareçam mesmo se a marca/categoria for nula
+$produtosPaginaSql = "
+    SELECT
+        p.id,
+        p.nome,
+        p.descricao,
+        p.valor_venda,
+        p.quantidade,
+        m.nome AS marca_nome,
+        c.nome AS categoria_nome
+    FROM produtos p
+    LEFT JOIN marcas m ON p.marca_id = m.id
+    LEFT JOIN categorias c ON p.categoria_id = c.id
+    ORDER BY p.nome ASC
+    LIMIT ?, ?
+";
+
+// Prepara, executa e busca os resultados de forma segura
+$stmt = mysqli_prepare($conexao, $produtosPaginaSql);
+mysqli_stmt_bind_param($stmt, "ii", $inicio, $itensPorPagina);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+$produtosPagina = [];
+while ($row = mysqli_fetch_assoc($result)) {
+  $produtosPagina[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -44,7 +73,7 @@ $produtosPagina = array_slice($produtos, $inicio, $itensPorPagina);
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Gestão de Produtos</h1>
           <button class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
-            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24" stroke-width="2" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
             Adicionar Produto
@@ -52,83 +81,69 @@ $produtosPagina = array_slice($produtos, $inicio, $itensPorPagina);
         </div>
 
         <div class="mb-6">
-          <input type="search" placeholder="Pesquisar por nome ou categoria..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="search" id="searchInput" placeholder="Pesquisar por nome ou categoria..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 
         <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
-
-          <div class="grid gap-4 sm:hidden searchable-container">
-            <?php foreach ($produtosPagina as $produto): ?>
-              <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
-                <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($produto['nome']); ?></h2>
-                <p class="text-sm text-[var(--color-text-secondary)] truncate"><?= htmlspecialchars($produto['descricao']); ?></p>
-                <div class="flex justify-between items-center mt-2">
-                  <span class="font-semibold text-lg text-[var(--color-text-primary)]">R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?></span>
-                  <span class="text-sm text-[var(--color-text-secondary)]">Estoque: <?= $produto['quantidade']; ?></span>
+          <?php if (empty($produtosPagina)): ?>
+            <div class="text-center py-8">
+              <p class="text-[var(--color-text-secondary)]">Nenhum produto encontrado.</p>
+              <p class="text-[var(--color-text-secondary)] mt-2">Clique em "Adicionar Produto" para começar.</p>
+            </div>
+          <?php else: ?>
+            <div class="grid gap-4 sm:hidden searchable-container">
+              <?php foreach ($produtosPagina as $produto): ?>
+                <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
+                  <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($produto['nome']); ?></h2>
+                  <p class="text-sm text-[var(--color-text-secondary)] truncate"><?= htmlspecialchars($produto['descricao']); ?></p>
+                  <div class="flex justify-between items-center mt-2">
+                    <span class="font-semibold text-lg text-[var(--color-text-primary)]">R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?></span>
+                    <span class="text-sm text-[var(--color-text-secondary)]">Estoque: <?= $produto['quantidade']; ?></span>
+                  </div>
+                  <div class="flex gap-2 mt-4">
+                    <a href="#" class="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-blue-600">Editar</a>
+                    <a href="#" class="bg-red-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-red-600">Deletar</a>
+                  </div>
                 </div>
-                <div class="flex gap-2 mt-4">
-                  <a href="#" class="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-blue-600">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M4 20h4l12-12-4-4-12 12v4z" />
-                    </svg>
-                    Editar
-                  </a>
-                  <a href="#" class="bg-red-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-red-600">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    Deletar
-                  </a>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
+              <?php endforeach; ?>
+            </div>
 
-          <div class="overflow-x-auto hidden sm:block">
-            <table class="w-full text-left text-sm sm:text-base min-w-[900px] searchable-table">
-              <thead>
-                <tr class="border-b border-[var(--color-border)]">
-                  <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Nome</th>
-                  <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Valor Venda</th>
-                  <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Qtd.</th>
-                  <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Marca</th>
-                  <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Categoria</th>
-                  <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php foreach ($produtosPagina as $produto): ?>
-                  <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)] searchable-row">
-                    <td class="p-3 font-medium text-[var(--color-text-primary)]"><?= htmlspecialchars($produto['nome']); ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]">R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['quantidade']); ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['marca']); ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['categoria']); ?></td>
-                    <td class="p-3 flex gap-2">
-                      <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M4 20h4l12-12-4-4-12 12v4z" />
-                        </svg>
-                        Editar
-                      </a>
-                      <a href="#" class="bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Deletar
-                      </a>
-                    </td>
+            <div class="overflow-x-auto hidden sm:block">
+              <table class="w-full text-left text-sm sm:text-base min-w-[900px] searchable-table">
+                <thead>
+                  <tr class="border-b border-[var(--color-border)]">
+                    <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Nome</th>
+                    <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Valor Venda</th>
+                    <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Qtd.</th>
+                    <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Marca</th>
+                    <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Categoria</th>
+                    <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Ações</th>
                   </tr>
-                <?php endforeach; ?>
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  <?php foreach ($produtosPagina as $produto): ?>
+                    <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)] searchable-row">
+                      <td class="p-3 font-medium text-[var(--color-text-primary)]"><?= htmlspecialchars($produto['nome']); ?></td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?></td>
+                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['quantidade']); ?></td>
+                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['marca_nome'] ?? 'N/A'); ?></td>
+                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?></td>
+                      <td class="p-3 flex gap-2">
+                        <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs">Editar</a>
+                        <a href="#" class="bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs">Deletar</a>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                </tbody>
+              </table>
+            </div>
 
-          <div class="mt-4 flex justify-between items-center">
-            <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">Anterior</a>
-            <span class="text-sm text-[var(--color-text-secondary)]">Página <?= $paginaAtual ?> de <?= $totalPaginas ?></span>
-            <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">Próximo</a>
-          </div>
+            <div class="mt-4 flex justify-between items-center">
+              <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">Anterior</a>
+              <span class="text-sm text-[var(--color-text-secondary)]">Página <?= $paginaAtual ?> de <?= $totalPaginas ?></span>
+              <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">Próximo</a>
+            </div>
+          <?php endif; ?>
         </div>
       </main>
     </div>

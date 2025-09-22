@@ -5,16 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const vendasPorDiaCtx = document.getElementById("vendasPorDiaChart");
   const vendasPorStatusCtx = document.getElementById("vendasPorStatusChart");
 
-  // ======== Gráficos ========
+  //Gráficos
   if (vendasPorDiaCtx) {
     new Chart(vendasPorDiaCtx, {
       type: "bar",
       data: {
-        labels: ["15/09", "16/09", "17/09", "18/09", "19/09", "20/09", "21/09"],
+        labels: vendasPorDiaLabels,
         datasets: [
           {
             label: "Vendas (R$)",
-            data: [120, 190, 300, 500, 200, 350, 450],
+            data: vendasPorDiaData,
             backgroundColor: "rgba(59, 130, 246, 0.5)",
             borderColor: "rgba(59, 130, 246, 1)",
             borderWidth: 1,
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [
           {
             label: "Status de Vendas",
-            data: [3, 2],
+            data: vendasPorStatusData,
             backgroundColor: [
               "rgba(16, 185, 129, 0.7)",
               "rgba(245, 158, 11, 0.7)",
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ======== Sidebar ========
+  // Sidebar
   const applySidebarState = () => {
     if (
       window.innerWidth < 1024 ||
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ======== Theme Switcher ========
+  //Theme Switcher
   const htmlElement = document.documentElement;
   const themeButton = document.getElementById("theme-button");
   const themeOptions = document.getElementById("theme-options");
@@ -129,14 +129,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return "w-4 h-4 rounded-full bg-blue-400";
   }
 
-  // ======== Utilitário para remover acentos ========
+  //Utilitário para remover acentos
   const normalizeText = (text) =>
     text
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
-  // ======== Pesquisa Global Universal ========
+  // Pesquisa Global Universal
   const searchInput = document.querySelector(".search-input");
   if (searchInput) {
     searchInput.addEventListener("input", () => {
@@ -148,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const items = [...tables, ...grids];
 
       items.forEach((item) => {
-        // Pega o conteúdo do primeiro e segundo elemento relevante para comparar
         const nome = normalizeText(
           item.querySelector("td:first-child, h2")?.textContent || ""
         );
@@ -162,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ======== Toggle Gráficos / KPIs com Fade ========
+  // Toggle Gráficos / KPIs com Fade
   if (body.dataset.currentPage === "inicio") {
     const chartsSection = document.getElementById("charts-section");
     const kpisSection = document.getElementById("kpis-section");
@@ -215,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showKpisBtn.addEventListener("click", () => setView("kpis"));
   }
 
-  // ======== Paginação ========
+  // Paginação
   const stylePaginationButtons = () => {
     const prevBtn = document.querySelector(".pag-prev");
     const nextBtn = document.querySelector(".pag-next");
@@ -237,4 +236,81 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   stylePaginationButtons();
+
+  // Função genérica para abrir/fechar qualquer modal
+  const setupModal = (modalId, openSelector, closeSelector) => {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    const openBtns = document.querySelectorAll(openSelector);
+    const closeBtns = modal.querySelectorAll(closeSelector);
+
+    const open = () => {
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    };
+    const close = () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    };
+
+    openBtns.forEach((btn) => btn.addEventListener("click", open));
+    closeBtns.forEach((btn) => btn.addEventListener("click", close));
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+    });
+  };
+
+  // Lógica Específica para a Página de Clientes
+  if (body.dataset.currentPage === "clientes") {
+    // Configura os 3 modais da página
+    setupModal(
+      "add-client-modal",
+      "#open-modal-btn",
+      "#close-modal-btn, #cancel-modal-btn"
+    );
+    setupModal(
+      "edit-client-modal",
+      ".open-edit-modal-btn",
+      ".close-edit-modal-btn, .cancel-edit-modal-btn"
+    );
+    setupModal(
+      "delete-confirm-modal",
+      ".open-delete-modal-btn",
+      "#cancel-delete-btn"
+    );
+
+    // Lógica para preencher o modal de EDIÇÃO com dados do cliente
+    document.querySelectorAll(".open-edit-modal-btn").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const modal = document.getElementById("edit-client-modal");
+        const data = e.currentTarget.dataset;
+
+        // Preenche os campos do formulário de edição
+        modal.querySelector("#edit-id").value = data.id;
+        modal.querySelector("#edit-nome").value = data.nome;
+        modal.querySelector("#edit-tipo_cliente").value = data.tipo;
+        modal.querySelector("#edit-telefone").value = data.telefone;
+      });
+    });
+
+    // Lógica para configurar o modal de EXCLUSÃO
+    document.querySelectorAll(".open-delete-modal-btn").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const modal = document.getElementById("delete-confirm-modal");
+        const data = e.currentTarget.dataset;
+
+        // Personaliza o texto e o link de confirmação
+        modal.querySelector(
+          "#delete-confirm-text"
+        ).textContent = `Você tem certeza que deseja excluir o cliente "${data.nome}"?`;
+        modal.querySelector(
+          "#confirm-delete-btn"
+        ).href = `../../actions/delete_cliente_action.php?id=${data.id}`;
+      });
+    });
+  }
 });
