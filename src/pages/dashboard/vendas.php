@@ -2,18 +2,18 @@
 require_once '../../includes/auth_check.php';
 $currentPage = "vendas";
 
-// mock de vendas
+// mock de vendas com data em formato padrão
 $vendas = [
-  ['produto' => 'Perfume Kaiak', 'cliente' => 'Ana Silva', 'data' => '21/09/2025', 'status' => 'Pago', 'valor' => 120.50],
-  ['produto' => 'Desodorante Corporal', 'cliente' => 'Bruno Costa', 'data' => '21/09/2025', 'status' => 'Pendente', 'valor' => 45.00],
-  ['produto' => 'Sabonete Líquido', 'cliente' => 'Carla Dias', 'data' => '20/09/2025', 'status' => 'Pago', 'valor' => 25.75],
-  ['produto' => 'Body Splash', 'cliente' => 'Daniel Farias', 'data' => '19/09/2025', 'status' => 'Pago', 'valor' => 60.00],
-  ['produto' => 'Creme de Pentear', 'cliente' => 'Fernanda Lima', 'data' => '18/09/2025', 'status' => 'Pendente', 'valor' => 30.00],
-  ['produto' => 'Shampoo Antiqueda', 'cliente' => 'Gabriel Rocha', 'data' => '17/09/2025', 'status' => 'Pago', 'valor' => 50.00],
-  ['produto' => 'Condicionador', 'cliente' => 'Helena Souza', 'data' => '16/09/2025', 'status' => 'Pago', 'valor' => 45.00],
+  ['produto' => 'Perfume Kaiak', 'cliente' => 'Ana Silva', 'data' => '2025-09-21', 'status' => 'Pago', 'valor' => 120.50],
+  ['produto' => 'Desodorante Corporal', 'cliente' => 'Bruno Costa', 'data' => '2025-09-21', 'status' => 'Pendente', 'valor' => 45.00],
+  ['produto' => 'Sabonete Líquido', 'cliente' => 'Carla Dias', 'data' => '2025-09-20', 'status' => 'Pago', 'valor' => 25.75],
+  ['produto' => 'Body Splash', 'cliente' => 'Daniel Farias', 'data' => '2025-09-19', 'status' => 'Pago', 'valor' => 60.00],
+  ['produto' => 'Creme de Pentear', 'cliente' => 'Fernanda Lima', 'data' => '2025-09-18', 'status' => 'Pendente', 'valor' => 30.00],
+  ['produto' => 'Shampoo Antiqueda', 'cliente' => 'Gabriel Rocha', 'data' => '2025-09-17', 'status' => 'Pago', 'valor' => 50.00],
+  ['produto' => 'Condicionador', 'cliente' => 'Helena Souza', 'data' => '2025-09-16', 'status' => 'Pago', 'valor' => 45.00],
 ];
 
-// paginação
+// Lógica de paginação
 $itensPorPagina = 5;
 $totalVendas = count($vendas);
 $totalPaginas = ceil($totalVendas / $itensPorPagina);
@@ -54,18 +54,18 @@ $vendasPagina = array_slice($vendas, $inicio, $itensPorPagina);
         </div>
 
         <div class="mb-6">
-          <input type="search" placeholder="Pesquisar por produto ou cliente..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="search" id="searchInput" placeholder="Pesquisar por produto ou cliente..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 
         <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
 
-          <!-- Cards mobile -->
-          <div class="grid gap-4 sm:hidden">
+          <div class="grid gap-4 sm:hidden searchable-container">
             <?php foreach ($vendasPagina as $venda): ?>
-              <div class="p-4 border border-[var(--color-border)] rounded-lg">
+              <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
                 <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($venda['produto']) ?></h2>
                 <p class="text-sm text-[var(--color-text-secondary)]">Cliente: <?= htmlspecialchars($venda['cliente']) ?></p>
-                <p class="text-sm text-[var(--color-text-secondary)]">Data: <?= htmlspecialchars($venda['data']) ?></p>
+                <p class="text-sm text-[var(--color-text-secondary)]">Data: <?= date('d/m/Y', strtotime($venda['data'])) ?></p>
+                <p class="text-sm text-[var(--color-text-secondary)]">Valor: R$ <?= number_format($venda['valor'], 2, ',', '.') ?></p>
                 <p class="text-sm text-[var(--color-text-secondary)]">
                   Status:
                   <?php if ($venda['status'] === 'Pago'): ?>
@@ -74,15 +74,14 @@ $vendasPagina = array_slice($vendas, $inicio, $itensPorPagina);
                     <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Pendente</span>
                   <?php endif; ?>
                 </p>
-                <p class="text-sm text-[var(--color-text-secondary)]">Valor: R$ <?= number_format($venda['valor'], 2, ',', '.') ?></p>
                 <div class="flex gap-2 mt-2">
-                  <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600">
+                  <a href="#" class="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-blue-600">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M4 20h4l12-12-4-4-12 12v4z" />
                     </svg>
                     Editar
                   </a>
-                  <a href="#" class="bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600">
+                  <a href="#" class="bg-red-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-red-600">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -93,9 +92,8 @@ $vendasPagina = array_slice($vendas, $inicio, $itensPorPagina);
             <?php endforeach; ?>
           </div>
 
-          <!-- Tabela desktop -->
           <div class="overflow-x-auto hidden sm:block">
-            <table class="w-full text-left text-sm sm:text-base min-w-[700px]">
+            <table class="w-full text-left text-sm sm:text-base min-w-[700px] searchable-table">
               <thead>
                 <tr class="border-b border-[var(--color-border)]">
                   <th class="p-3 font-semibold text-[var(--color-text-secondary)]">Produto</th>
@@ -108,10 +106,10 @@ $vendasPagina = array_slice($vendas, $inicio, $itensPorPagina);
               </thead>
               <tbody>
                 <?php foreach ($vendasPagina as $venda): ?>
-                  <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)]">
+                  <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)] searchable-row">
                     <td class="p-3 font-medium text-[var(--color-text-primary)]"><?= htmlspecialchars($venda['produto']) ?></td>
                     <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($venda['cliente']) ?></td>
-                    <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($venda['data']) ?></td>
+                    <td class="p-3 text-[var(--color-text-secondary)]"><?= date('d/m/Y', strtotime($venda['data'])) ?></td>
                     <td class="p-3">
                       <?php if ($venda['status'] === 'Pago'): ?>
                         <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Pago</span>
@@ -121,13 +119,13 @@ $vendasPagina = array_slice($vendas, $inicio, $itensPorPagina);
                     </td>
                     <td class="p-3 font-medium text-[var(--color-text-primary)]">R$ <?= number_format($venda['valor'], 2, ',', '.') ?></td>
                     <td class="p-3 flex gap-2">
-                      <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600">
+                      <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M4 20h4l12-12-4-4-12 12v4z" />
                         </svg>
                         Editar
                       </a>
-                      <a href="#" class="bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600">
+                      <a href="#" class="bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -140,19 +138,15 @@ $vendasPagina = array_slice($vendas, $inicio, $itensPorPagina);
             </table>
           </div>
 
-          <!-- Paginação -->
           <div class="mt-4 flex justify-between items-center">
             <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">Anterior</a>
-            <span class="text-[var(--color-text-secondary)]">Página <?= $paginaAtual ?> de <?= $totalPaginas ?></span>
+            <span class="text-sm text-[var(--color-text-secondary)]">Página <?= $paginaAtual ?> de <?= $totalPaginas ?></span>
             <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">Próximo</a>
           </div>
-
         </div>
-
       </main>
     </div>
   </div>
-
   <script src="../../scripts/dashboard.js"></script>
 </body>
 
