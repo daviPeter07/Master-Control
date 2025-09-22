@@ -313,4 +313,58 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // Lógica Específica para a Página de Produtos
+  if (body.dataset.currentPage === "produtos") {
+    // Configura os 3 modais da página
+    setupModal(
+      "add-product-modal",
+      "#open-add-modal-btn",
+      ".close-add-modal-btn, .cancel-add-modal-btn"
+    );
+    setupModal(
+      "edit-product-modal",
+      ".open-edit-modal-btn",
+      ".close-edit-modal-btn, .cancel-edit-modal-btn"
+    );
+    setupModal(
+      "delete-confirm-modal",
+      ".open-delete-modal-btn",
+      "#cancel-delete-btn"
+    );
+
+    // Lógica para preencher o modal de EDIÇÃO com dados do produto
+    document.querySelectorAll(".open-edit-modal-btn").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const modal = document.getElementById("edit-product-modal");
+        const data = e.currentTarget.dataset;
+
+        modal.querySelector("#edit-id").value = data.id;
+        modal.querySelector("#edit-nome").value = data.nome;
+        modal.querySelector("#edit-descricao").value = data.descricao;
+        modal.querySelector("#edit-valor_custo").value = data.valor_custo;
+        modal.querySelector("#edit-valor_venda").value = data.valor_venda;
+        modal.querySelector("#edit-quantidade").value = data.quantidade;
+        modal.querySelector("#edit-genero").value = data.genero;
+        modal.querySelector("#edit-marca_id").value = data.marca_id;
+        modal.querySelector("#edit-categoria_id").value = data.categoria_id;
+      });
+    });
+
+    document.querySelectorAll(".open-delete-modal-btn").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const modal = document.getElementById("delete-confirm-modal");
+        const data = e.currentTarget.dataset;
+
+        // Texto de confirmação
+        modal.querySelector(
+          "#delete-confirm-text"
+        ).textContent = `Você tem certeza que deseja excluir o produto "${data.nome}"?`;
+
+        modal.querySelector(
+          "#confirm-delete-btn"
+        ).href = `../../actions/delete_produto_action.php?id=${data.id}`;
+      });
+    });
+  }
 });
