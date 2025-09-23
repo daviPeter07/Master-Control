@@ -1,40 +1,43 @@
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 :root {
   --color-primary: #2563eb;
   --color-background: #f3f4f6;
-  --color-surface: #ffffff; 
+  --color-surface: #ffffff;
   --color-text-primary: #111827;
   --color-text-secondary: #4b5563;
-  --color-border: #d1d5db;       
+  --color-border: #d1d5db;
 }
 
-
 [data-theme="light-pink"] {
-  --color-primary: #ec4899;      
+  --color-primary: #ec4899;
 }
 
 [data-theme="light-orange"] {
-  --color-primary: #f97316;    
+  --color-primary: #f97316;
 }
 
 /* --- TEMAS DARK --- */
-[data-theme="light-pink"]   { --color-primary: #ec4899; }
-[data-theme="light-orange"] { --color-primary: #f97316; }
+[data-theme="light-pink"] {
+  --color-primary: #ec4899;
+}
+[data-theme="light-orange"] {
+  --color-primary: #f97316;
+}
 
 [data-theme="dark-blue"] {
-  --color-primary: #3b82f6;      
-  --color-background: #111827;   
-  --color-surface: #1f2937;     
-  --color-text-primary: #f9fafb;  
-  --color-text-secondary: #9ca3af; 
-  --color-border: #374151;     
+  --color-primary: #3b82f6;
+  --color-background: #111827;
+  --color-surface: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #9ca3af;
+  --color-border: #374151;
 }
 
 [data-theme="dark-pink"] {
-  --color-primary: #f472b6;     
+  --color-primary: #f472b6;
   --color-background: #111827;
   --color-surface: #1f2937;
   --color-text-primary: #f9fafb;
@@ -43,7 +46,7 @@ body {
 }
 
 [data-theme="dark-orange"] {
-  --color-primary: #fb923c;  
+  --color-primary: #fb923c;
   --color-background: #111827;
   --color-surface: #1f2937;
   --color-text-primary: #f9fafb;
