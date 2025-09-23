@@ -3,48 +3,46 @@ require_once '../../includes/auth_check.php';
 require_once '../../../database/index.php';
 $currentPage = "contas";
 
+// buscar dados
+$clientesResult = mysqli_query($conexao, "SELECT id, nome FROM clientes ORDER BY nome ASC");
+$clientes = mysqli_fetch_all($clientesResult, MYSQLI_ASSOC);
+$produtosResult = mysqli_query($conexao, "SELECT id, nome, valor_venda FROM produtos WHERE quantidade > 0 ORDER BY nome ASC");
+$produtos = mysqli_fetch_all($produtosResult, MYSQLI_ASSOC);
 
-// 1. Definir itens por página
+// Definir itens por página
 $itensPorPagina = 5;
 
-// 2. Contar o total de contas (vendas) no banco
+// Contar o total de contas (vendas) no banco
 $totalContasSql = "SELECT COUNT(id) AS total FROM vendas";
 $totalResult = mysqli_query($conexao, $totalContasSql);
 $totalContas = mysqli_fetch_assoc($totalResult)['total'];
 $totalPaginas = $totalContas > 0 ? ceil($totalContas / $itensPorPagina) : 1;
-
-// 3. Obter e validar a página atual
 $paginaAtual = isset($_GET['pagina']) ? max(1, min((int)$_GET['pagina'], $totalPaginas)) : 1;
-
-// 4. Calcular o offset para a query
 $inicio = ($paginaAtual - 1) * $itensPorPagina;
 
-// 5. Query para buscar as contas da página atual, juntando com o nome do cliente
+// Query para buscar as contas da página atual, com todos os dados necessários
 $contasPaginaSql = "
     SELECT
         v.id,
+        v.cliente_id,
         v.valor_total,
         v.metodo_pagamento,
         v.status_pagamento,
         v.data_venda,
-        c.nome AS cliente_nome
+        c.nome AS cliente_nome,
+        (SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT('produto_id', iv.produto_id, 'quantidade', iv.quantidade)), ']')
+         FROM itens_venda iv WHERE iv.venda_id = v.id) AS itens_json
     FROM vendas v
     JOIN clientes c ON v.cliente_id = c.id
     ORDER BY v.data_venda DESC
     LIMIT ?, ?
 ";
 
-// Prepara, executa e busca os resultados de forma segura
 $stmt = mysqli_prepare($conexao, $contasPaginaSql);
 mysqli_stmt_bind_param($stmt, "ii", $inicio, $itensPorPagina);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
-
-// Monta o array com as contas da página
-$contasPagina = [];
-while ($row = mysqli_fetch_assoc($result)) {
-  $contasPagina[] = $row;
-}
+$contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -182,20 +180,19 @@ while ($row = mysqli_fetch_assoc($result)) {
                       <td class="p-3 flex gap-2">
 
                         <!--Actions edit-->
-                        <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600"
+                        <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs"
                           data-id="<?= $conta['id'] ?>"
-                          data-cliente-nome="<?= htmlspecialchars($conta['cliente_nome']) ?>"
-                          data-valor-total="<?= htmlspecialchars($conta['valor_total']) ?>"
-                          data-metodo-pagamento="<?= $conta['metodo_pagamento'] ?>"
-                          data-data-venda="<?= $conta['data_venda'] ?>"
-                          data-status-pagamento="<?= $conta['status_pagamento'] ?>">
+                          data-cliente-id="<?= $conta['cliente_id'] ?>"
+                          data-metodo="<?= $conta['metodo_pagamento'] ?>"
+                          data-status="<?= $conta['status_pagamento'] ?>"
+                          data-itens='<?= htmlspecialchars($conta['itens_json'] ?? '[]') ?>'>
                           Editar
                         </button>
 
                         <!--Actions delete-->
-                        <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600"
-                          data-id="<?= $produto['id'] ?>"
-                          data-cliente-nome="<?= htmlspecialchars($produto['cliente_nome']) ?>">
+                        <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
+                          data-id="<?= $conta['id'] ?>"
+                          data-nome="Conta #<?= $conta['id'] ?>">
                           Deletar
                         </button>
                       </td>
@@ -226,7 +223,9 @@ while ($row = mysqli_fetch_assoc($result)) {
   </div>
 
   <?php
-
+  require_once '../../includes/components/modal/vendas/modal_add_venda.php';
+  require_once '../../includes/components/modal/vendas/modal_edit_venda.php';
+  require_once '../../includes/components/modal/modal_delete_confirm.php';
   ?>
 
   <script src="../../scripts/dashboard.js"></script>

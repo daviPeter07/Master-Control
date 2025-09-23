@@ -369,7 +369,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Lógica Específica para a Página de Vendas
-  if (body.dataset.currentPage === "vendas") {
+  if (
+    body.dataset.currentPage === "vendas" ||
+    body.dataset.currentPage === "contas"
+  ) {
     // Configura os 3 modais da página
     setupModal(
       "add-venda-modal",
@@ -387,7 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "#cancel-delete-btn"
     );
 
-    // 2. Lógica do modal de ADICIONAR Venda (Itens Dinâmicos)
+    // Lógica do modal de ADICIONAR Venda (Itens Dinâmicos)
     const addItemBtn = document.getElementById("add-item-btn");
     const itemsContainer = document.getElementById("itens-venda-container");
     const itemTemplate = document.getElementById("item-venda-template");
