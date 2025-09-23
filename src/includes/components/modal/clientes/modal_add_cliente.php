@@ -10,7 +10,7 @@
       </button>
     </div>
 
-    <form action="../../actions/add_cliente_action.php" method="POST">
+    <form action="/masterControl/src/actions/clientes/edit_cliente_action.php" method="POST">
       <div class="space-y-4">
         <div>
           <label for="nome" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Nome Completo</label>

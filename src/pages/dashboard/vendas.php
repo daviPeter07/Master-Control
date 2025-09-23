@@ -1,58 +1,44 @@
 <?php
 require_once '../../includes/auth_check.php';
-require_once '../../../database/index.php'; // Sua conexão com o banco
+require_once '../../../database/index.php';
 $currentPage = "vendas";
 
-// --- Lógica de Paginação com o Banco de Dados ---
+// Busca clientes e produtos para preencher os <select>
+$clientesResult = mysqli_query($conexao, "SELECT id, nome FROM clientes ORDER BY nome ASC");
+$clientes = mysqli_fetch_all($clientesResult, MYSQLI_ASSOC);
+$produtosResult = mysqli_query($conexao, "SELECT id, nome, valor_venda FROM produtos WHERE quantidade > 0 ORDER BY nome ASC");
+$produtos = mysqli_fetch_all($produtosResult, MYSQLI_ASSOC);
 
-// 1. Definir quantos itens por página
+// Paginação (sem alterações)
 $itensPorPagina = 5;
-
-// 2. Contar o total de vendas no banco para calcular o número de páginas
 $totalVendasSql = "SELECT COUNT(*) AS total FROM vendas";
 $totalResult = mysqli_query($conexao, $totalVendasSql);
 $totalVendas = mysqli_fetch_assoc($totalResult)['total'];
-$totalPaginas = ceil($totalVendas / $itensPorPagina);
-
-// 3. Pegar a página atual da URL, garantindo que seja um número válido
+$totalPaginas = $totalVendas > 0 ? ceil($totalVendas / $itensPorPagina) : 1;
 $paginaAtual = isset($_GET['pagina']) ? max(1, min((int)$_GET['pagina'], $totalPaginas)) : 1;
-
-// 4. Calcular o offset (ponto de início) para a query SQL
 $inicio = ($paginaAtual - 1) * $itensPorPagina;
 
-// 5. Query para buscar as vendas da página atual, já com os nomes de produtos e clientes
-// Usamos prepared statements para segurança ao passar os limites da paginação.
+// A subquery com JSON_OBJECT cria um array de itens para cada venda
 $vendasPaginaSql = "
     SELECT
-        v.id,
+        v.id, v.cliente_id, v.data_venda, v.status_pagamento, v.metodo_pagamento, v.valor_total,
         c.nome AS cliente_nome,
-        v.data_venda,
-        v.status_pagamento,
-        v.valor_total,
-        GROUP_CONCAT(p.nome SEPARATOR ', ') AS produtos
+        GROUP_CONCAT(DISTINCT p.nome SEPARATOR ', ') AS produtos,
+        (SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT('produto_id', iv.produto_id, 'quantidade', iv.quantidade)), ']')
+         FROM itens_venda iv WHERE iv.venda_id = v.id) AS itens_json
     FROM vendas v
     JOIN clientes c ON v.cliente_id = c.id
-    JOIN itens_venda iv ON v.id = iv.venda_id
-    JOIN produtos p ON iv.produto_id = p.id
+    LEFT JOIN itens_venda iv ON v.id = iv.venda_id
+    LEFT JOIN produtos p ON iv.produto_id = p.id
     GROUP BY v.id
     ORDER BY v.data_venda DESC
     LIMIT ?, ?
 ";
-
-// Prepara a consulta
 $stmt = mysqli_prepare($conexao, $vendasPaginaSql);
-// Associa os parâmetros (i = integer)
 mysqli_stmt_bind_param($stmt, "ii", $inicio, $itensPorPagina);
-// Executa a consulta
 mysqli_stmt_execute($stmt);
-// Pega os resultados
 $result = mysqli_stmt_get_result($stmt);
-
-// Monta o array com as vendas da página
-$vendasPagina = [];
-while ($row = mysqli_fetch_assoc($result)) {
-  $vendasPagina[] = $row;
-}
+$vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -78,7 +64,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Vendas Gerais</h1>
-          <button class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
+          <button id="open-add-modal-btn" class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
@@ -93,7 +79,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
           <?php if (empty($vendasPagina)): ?>
             <div class="text-center py-8">
-              <p class="text-[var(--color-text-secondary)]">Nenhuma venda encontrado.</p>
+              <p class="text-[var(--color-text-secondary)]">Nenhuma venda encontrada.</p>
               <p class="text-[var(--color-text-secondary)] mt-2">Clique em "Adicionar Venda" para começar.</p>
             </div>
           <?php else: ?>
@@ -102,19 +88,14 @@ while ($row = mysqli_fetch_assoc($result)) {
                 <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
                   <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($venda['produtos']) ?></h2>
                   <p class="text-sm text-[var(--color-text-secondary)]">Cliente: <?= htmlspecialchars($venda['cliente_nome']) ?></p>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Data: <?= date('d/m/Y', strtotime($venda['data_venda'])) ?></p>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Valor: R$ <?= number_format($venda['valor_total'], 2, ',', '.') ?></p>
-                  <p class="text-sm text-[var(--color-text-secondary)]">
-                    Status:
-                    <?php if ($venda['status_pagamento'] === 'PAGO'): ?>
-                      <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Pago</span>
-                    <?php else: ?>
-                      <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Pendente</span>
-                    <?php endif; ?>
-                  </p>
                   <div class="flex gap-2 mt-2">
-                    <a href="#" class="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-blue-600">Editar</a>
-                    <a href="#" class="bg-red-500 text-white px-3 py-1 text-sm rounded-lg flex items-center gap-1 hover:bg-red-600">Deletar</a>
+                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 text-sm rounded-lg"
+                      data-id="<?= $venda['id'] ?>"
+                      data-cliente-id="<?= $venda['cliente_id'] ?>"
+                      data-metodo="<?= $venda['metodo_pagamento'] ?>"
+                      data-status="<?= $venda['status_pagamento'] ?>">Editar</button>
+                    <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 text-sm rounded-lg"
+                      data-id="<?= $venda['id'] ?>">Deletar</button>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -147,8 +128,13 @@ while ($row = mysqli_fetch_assoc($result)) {
                       </td>
                       <td class="p-3 font-medium text-[var(--color-text-primary)]">R$ <?= number_format($venda['valor_total'], 2, ',', '.') ?></td>
                       <td class="p-3 flex gap-2">
-                        <a href="#" class="bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs">Editar</a>
-                        <a href="#" class="bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs">Deletar</a>
+                        <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs"
+                          data-id="<?= $venda['id'] ?>"
+                          data-cliente-id="<?= $venda['cliente_id'] ?>"
+                          data-metodo="<?= $venda['metodo_pagamento'] ?>"
+                          data-status="<?= $venda['status_pagamento'] ?>">Editar</button>
+                        <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
+                          data-id="<?= $venda['id'] ?>">Deletar</button>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -166,6 +152,13 @@ while ($row = mysqli_fetch_assoc($result)) {
       </main>
     </div>
   </div>
+
+  <?php
+  require_once '../../includes/components/modal/vendas/modal_add_venda.php';
+  require_once '../../includes/components/modal/vendas/modal_edit_venda.php';
+  require_once '../../includes/components/modal/modal_delete_confirm.php';
+  ?>
+
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

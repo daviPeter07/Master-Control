@@ -59,6 +59,7 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
       <?php require_once '../../includes/components/header.php'; ?>
 
       <main class="p-4 md:p-8 transition-all duration-300 lg:ml-64 group-[.sidebar-closed]:lg:ml-0">
+        <!--Title e button para add item-->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Gestão de Produtos</h1>
           <button id="open-add-modal-btn" class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
@@ -69,10 +70,12 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
           </button>
         </div>
 
+        <!--Input pesquisa-->
         <div class="mb-6">
           <input type="search" id="searchInput" placeholder="Pesquisar por nome, marca ou categoria..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 
+        <!--No Data-->
         <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
           <?php if (empty($produtosPagina)): ?>
             <div class="text-center py-8">
@@ -80,19 +83,35 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
               <p class="text-[var(--color-text-secondary)] mt-2">Clique em "Adicionar Produto" para começar.</p>
             </div>
           <?php else: ?>
+
             <!-- Cards Mobile -->
             <div class="grid gap-4 sm:hidden searchable-container">
               <?php foreach ($produtosPagina as $produto): ?>
                 <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
-                  <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($produto['nome']); ?></h2>
-                  <p class="text-sm text-[var(--color-text-secondary)] truncate"><?= htmlspecialchars($produto['descricao']); ?></p>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Marca: <?= htmlspecialchars($produto['marca_nome'] ?? 'N/A'); ?></p>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Categoria: <?= htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?></p>
+                  <h2 class="font-semibold text-[var(--color-text-primary)]">
+                    <?= htmlspecialchars($produto['nome']); ?>
+                  </h2>
+                  <p class="text-sm text-[var(--color-text-secondary)] truncate">
+                    <?= htmlspecialchars($produto['descricao']); ?>
+                  </p>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    Marca: <?= htmlspecialchars($produto['marca_nome'] ?? 'N/A'); ?>
+                  </p>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    Categoria: <?= htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?>
+                  </p>
                   <div class="flex justify-between items-center mt-2">
-                    <span class="font-semibold text-lg text-[var(--color-text-primary)]">R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?></span>
-                    <span class="text-sm text-[var(--color-text-secondary)]">Estoque: <?= $produto['quantidade']; ?></span>
+                    <span class="font-semibold text-lg text-[var(--color-text-primary)]">
+                      R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?>
+                    </span>
+                    <span class="text-sm text-[var(--color-text-secondary)]">
+                      Estoque: <?= $produto['quantidade']; ?>
+                    </span>
                   </div>
+
+                  <!--Actions mobile-->
                   <div class="flex gap-2 mt-4">
+                    <!--Actions edit mobile-->
                     <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600"
                       data-id="<?= $produto['id'] ?>"
                       data-nome="<?= htmlspecialchars($produto['nome']) ?>"
@@ -102,10 +121,16 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                       data-quantidade="<?= $produto['quantidade'] ?>"
                       data-genero="<?= $produto['genero'] ?>"
                       data-marca_id="<?= $produto['marca_id'] ?>"
-                      data-categoria_id="<?= $produto['categoria_id'] ?>">Editar</button>
+                      data-categoria_id="<?= $produto['categoria_id'] ?>">
+                      Editar
+                    </button>
+
+                    <!--Actions delete mobile-->
                     <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600"
                       data-id="<?= $produto['id'] ?>"
-                      data-nome="<?= htmlspecialchars($produto['nome']) ?>">Deletar</button>
+                      data-nome="<?= htmlspecialchars($produto['nome']) ?>">
+                      Deletar
+                    </button>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -128,12 +153,26 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 <tbody>
                   <?php foreach ($produtosPagina as $produto): ?>
                     <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)] searchable-row">
-                      <td class="p-3 font-medium text-[var(--color-text-primary)]"><?= htmlspecialchars($produto['nome']); ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['descricao']); ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]">R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['quantidade']); ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['marca_nome'] ?? 'N/A'); ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?></td>
+                      <td class="p-3 font-medium text-[var(--color-text-primary)]">
+                        <?= htmlspecialchars($produto['nome']); ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= htmlspecialchars($produto['descricao']); ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= htmlspecialchars($produto['quantidade']); ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= htmlspecialchars($produto['marca_nome'] ?? 'N/A'); ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?>
+                      </td>
+
+                      <!--Actions edit-->
                       <td class="p-3 flex gap-2">
                         <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600"
                           data-id="<?= $produto['id'] ?>"
@@ -144,10 +183,16 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                           data-quantidade="<?= $produto['quantidade'] ?>"
                           data-genero="<?= $produto['genero'] ?>"
                           data-marca_id="<?= $produto['marca_id'] ?>"
-                          data-categoria_id="<?= $produto['categoria_id'] ?>">Editar</button>
+                          data-categoria_id="<?= $produto['categoria_id'] ?>">
+                          Editar
+                        </button>
+
+                        <!--Actions delete-->
                         <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600"
                           data-id="<?= $produto['id'] ?>"
-                          data-nome="<?= htmlspecialchars($produto['nome']) ?>">Deletar</button>
+                          data-nome="<?= htmlspecialchars($produto['nome']) ?>">
+                          Deletar
+                        </button>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -157,9 +202,15 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
             <!-- Paginação -->
             <div class="mt-4 flex justify-between items-center">
-              <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">Anterior</a>
-              <span class="text-sm text-[var(--color-text-secondary)]">Página <?= $paginaAtual ?> de <?= $totalPaginas ?></span>
-              <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">Próximo</a>
+              <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">
+                Anterior
+              </a>
+              <span class="text-sm text-[var(--color-text-secondary)]">
+                Página <?= $paginaAtual ?> de <?= $totalPaginas ?>
+              </span>
+              <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">
+                Próximo
+              </a>
             </div>
           <?php endif; ?>
         </div>
@@ -168,9 +219,9 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
   </div>
 
   <?php
-  require_once '../../includes/components/modal_add_produto.php';
-  require_once '../../includes/components/modal_edit_produto.php';
-  require_once '../../includes/components/modal_delete_confirm.php';
+  require_once '../../includes/components/modal/produtos/modal_add_produto.php';
+  require_once '../../includes/components/modal/produtos/modal_edit_produto.php';
+  require_once '../../includes/components/modal/modal_delete_confirm.php';
   ?>
 
   <script src="../../scripts/dashboard.js"></script>

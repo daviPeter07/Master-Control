@@ -8,7 +8,7 @@
         </svg>
       </button>
     </div>
-    <form action="../../actions/edit_cliente_action.php" method="POST">
+    <form action="/masterControl/src/actions/clientes/edit_cliente_action.php" method="POST">
       <input type="hidden" name="id" id="edit-id">
 
       <div class="space-y-4">

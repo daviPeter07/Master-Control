@@ -4,7 +4,7 @@
       <h2 class="text-xl font-bold text-[var(--color-text-primary)]">Editar Produto</h2>
       <button class="close-edit-modal-btn text-[var(--color-text-secondary)]">X</button>
     </div>
-    <form action="../../actions/edit_produto_action.php" method="POST">
+    <form action="/masterControl/src/actions/produtos/edit_produto_action.php" method="POST">
       <input type="hidden" name="id" id="edit-id">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

@@ -57,7 +57,7 @@ session_start();
         unset($_SESSION['error_message']);
       endif;
       ?>
-      <form action="../../actions/process_login.php" method="POST" class="space-y-4">
+      <form action="../../actions/auth/process_login.php" method="POST" class="space-y-4">
         <div>
           <label
             for="email"

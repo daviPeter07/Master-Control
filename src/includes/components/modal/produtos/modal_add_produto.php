@@ -4,7 +4,7 @@
       <h2 class="text-xl font-bold text-[var(--color-text-primary)]">Adicionar Novo Produto</h2>
       <button class="close-add-modal-btn text-[var(--color-text-secondary)]">X</button>
     </div>
-    <form action="../../actions/add_produto_action.php" method="POST">
+    <form action="/masterControl/src/actions/produtos/add_produto_action.php" method="POST">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label for="nome" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Nome</label>

@@ -68,8 +68,6 @@ while ($row = mysqli_fetch_assoc($result)) {
           </button>
         </div>
 
-        <?php require_once '../../includes/components/modal_add_cliente.php' ?>
-
         <div class="mb-6">
           <input type="search" id="searchInput" placeholder="Pesquisar por cliente..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
@@ -138,9 +136,9 @@ while ($row = mysqli_fetch_assoc($result)) {
     </div>
   </div>
 
-  <?php require_once '../../includes/components/modal_add_cliente.php'; ?>
-  <?php require_once '../../includes/components/modal_edit_cliente.php'; ?>
-  <?php require_once '../../includes/components/modal_delete_confirm.php'; ?>
+  <?php require_once '../../includes/components/modal/clientes/modal_add_cliente.php'; ?>
+  <?php require_once '../../includes/components/modal/clientes/modal_edit_cliente.php'; ?>
+  <?php require_once '../../includes/components/modal/modal_delete_confirm.php'; ?>
 
   <script src="../../scripts/dashboard.js"></script>
 </body>

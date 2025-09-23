@@ -1,9 +1,8 @@
 <?php
 require_once '../../includes/auth_check.php';
-require_once '../../../database/index.php'; // Sua conexão com o banco
+require_once '../../../database/index.php';
 $currentPage = "contas";
 
-// --- Lógica de Paginação com o Banco de Dados ---
 
 // 1. Definir itens por página
 $itensPorPagina = 5;

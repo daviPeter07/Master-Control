@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ).textContent = `Você tem certeza que deseja excluir o cliente "${data.nome}"?`;
         modal.querySelector(
           "#confirm-delete-btn"
-        ).href = `../../actions/delete_cliente_action.php?id=${data.id}`;
+        ).href = `../../actions/clintes/delete_cliente_action.php?id=${data.id}`;
       });
     });
   }
@@ -363,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         modal.querySelector(
           "#confirm-delete-btn"
-        ).href = `../../actions/delete_produto_action.php?id=${data.id}`;
+        ).href = `../../actions/produtos/delete_produto_action.php?id=${data.id}`;
       });
     });
   }
