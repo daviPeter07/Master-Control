@@ -57,7 +57,8 @@ while ($row = mysqli_fetch_assoc($result)) {
       <?php require_once '../../includes/components/header.php'; ?>
 
       <main class="p-4 md:p-8 transition-all duration-300 lg:ml-64 group-[.sidebar-closed]:lg:ml-0">
-
+        
+        <!--Title e button para add item-->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Gestão de Clientes</h1>
           <button id="open-modal-btn" class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
@@ -68,10 +69,12 @@ while ($row = mysqli_fetch_assoc($result)) {
           </button>
         </div>
 
+        <!--Input pesquisa-->
         <div class="mb-6">
           <input type="search" id="searchInput" placeholder="Pesquisar por cliente..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 
+        <!--No Data-->
         <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
           <?php if (empty($clientesPagina)): ?>
             <div class="text-center py-8">
@@ -79,17 +82,42 @@ while ($row = mysqli_fetch_assoc($result)) {
               <p class="text-[var(--color-text-secondary)] mt-2">Clique em "Adicionar Cliente" para começar.</p>
             </div>
           <?php else: ?>
+
             <!-- Cards mobile -->
             <div class="grid gap-4 sm:hidden searchable-container">
               <?php foreach ($clientesPagina as $cliente): ?>
                 <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
-                  <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($cliente['nome']) ?></h2>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Tipo: <?= htmlspecialchars($cliente['tipo_cliente']) ?></p>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Telefone: <?= htmlspecialchars($cliente['telefone']) ?></p>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Cliente desde: <?= date('d/m/Y', strtotime($cliente['criado_em'])) ?></p>
+                  <h2 class="font-semibold text-[var(--color-text-primary)]">
+                    <?= htmlspecialchars($cliente['nome'] ?? 'N/A') ?>
+                  </h2>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    Tipo: <?= htmlspecialchars($cliente['tipo_cliente'] ?? 'N/A') ?>
+                  </p>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    Telefone: <?= htmlspecialchars($cliente['telefone'] ?? 'N/A') ?>
+                  </p>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    Cliente desde: <?= date('d/m/Y', strtotime($cliente['criado_em']) ?? 'N/A') ?>
+                  </p>
+
+                  <!--Actions mobile-->
                   <div class="flex gap-2 mt-2">
-                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs" data-id="<?= $cliente['id'] ?>" data-nome="<?= htmlspecialchars($cliente['nome']) ?>" data-tipo="<?= $cliente['tipo_cliente'] ?>" data-telefone="<?= htmlspecialchars($cliente['telefone']) ?>">Editar</button>
-                    <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs" data-id="<?= $cliente['id'] ?>" data-nome="<?= htmlspecialchars($cliente['nome']) ?>">Deletar</button>
+                    <!--Actions edit mobile-->
+                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs"
+                      data-id="<?= $cliente['id'] ?>"
+                      data-nome="<?= htmlspecialchars($cliente['nome']) ?>"
+                      data-tipo="<?= $cliente['tipo_cliente'] ?>"
+                      data-telefone="<?= htmlspecialchars($cliente['telefone']) ?>">
+                      Editar
+                    </button>
+
+                    <!--Actions delete mobile-->
+                    <button
+                      class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs"
+                      data-id="<?= $cliente['id'] ?>"
+                      data-nome="<?= htmlspecialchars($cliente['nome']) ?>">
+                      Deletar
+                    </button>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -110,13 +138,37 @@ while ($row = mysqli_fetch_assoc($result)) {
                 <tbody>
                   <?php foreach ($clientesPagina as $cliente): ?>
                     <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)] searchable-row">
-                      <td class="p-3 font-medium text-[var(--color-text-primary)]"><?= htmlspecialchars($cliente['nome']) ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($cliente['tipo_cliente']) ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($cliente['telefone']) ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= date('d/m/Y', strtotime($cliente['criado_em'])) ?></td>
+                      <td class="p-3 font-medium text-[var(--color-text-primary)]">
+                        <?= htmlspecialchars($cliente['nome'] ?? 'N/A') ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= htmlspecialchars($cliente['tipo_cliente'] ?? 'N/A') ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= htmlspecialchars($cliente['telefone'] ?? 'N/A') ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= date('d/m/Y', strtotime($cliente['criado_em']) ?? 'N/A') ?>
+                      </td>
+
                       <td class="p-3 flex gap-2">
-                        <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs" data-id="<?= $cliente['id'] ?>" data-nome="<?= htmlspecialchars($cliente['nome']) ?>" data-tipo="<?= $cliente['tipo_cliente'] ?>" data-telefone="<?= htmlspecialchars($cliente['telefone']) ?>">Editar</button>
-                        <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs" data-id="<?= $cliente['id'] ?>" data-nome="<?= htmlspecialchars($cliente['nome']) ?>">Deletar</button>
+                        <!--Actions edit-->
+                        <button
+                          class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs"
+                          data-id="<?= $cliente['id'] ?>"
+                          data-nome="<?= htmlspecialchars($cliente['nome']) ?>"
+                          data-tipo="<?= $cliente['tipo_cliente'] ?>"
+                          data-telefone="<?= htmlspecialchars($cliente['telefone']) ?>">
+                          Editar
+                        </button>
+
+                        <!--Actions delete-->
+                        <button
+                          class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-red-600 text-xs"
+                          data-id="<?= $cliente['id'] ?>"
+                          data-nome="<?= htmlspecialchars($cliente['nome']) ?>">
+                          Deletar
+                        </button>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -126,9 +178,17 @@ while ($row = mysqli_fetch_assoc($result)) {
 
             <!-- Paginação -->
             <div class="mt-4 flex justify-between items-center">
-              <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">Anterior</a>
-              <span class="text-sm text-[var(--color-text-secondary)]">Página <?= $paginaAtual ?> de <?= $totalPaginas ?></span>
-              <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">Próximo</a>
+              <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">
+                Anterior
+              </a>
+
+              <span class="text-sm text-[var(--color-text-secondary)]">
+                Página <?= $paginaAtual ?> de <?= $totalPaginas ?>
+              </span>
+
+              <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">
+                Próximo
+              </a>
             </div>
           <?php endif; ?>
         </div>

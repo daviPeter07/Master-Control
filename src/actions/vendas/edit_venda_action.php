@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once '../includes/auth_check.php';
-require_once '../../database/index.php';
+require_once '../../includes/auth_check.php';
+require_once '../../../database/index.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  mysqli_begin_transaction($conexao); // INICIA A TRANSAÇÃO
+  mysqli_begin_transaction($conexao); 
 
   try {
     // Dados principais da venda
@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantidades_novas = $_POST['quantidades'] ?? [];
     $novo_valor_total = 0;
 
-    // --- Lógica de Estoque e Itens ---
 
     // Buscar itens antigos para devolver ao estoque
     $sql_itens_antigos = "SELECT produto_id, quantidade FROM itens_venda WHERE venda_id = ?";
@@ -69,10 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_bind_param($stmt_update, "idssi", $cliente_id, $novo_valor_total, $metodo_pagamento, $status_pagamento, $venda_id);
     mysqli_stmt_execute($stmt_update);
 
-    mysqli_commit($conexao); // Se tudo deu certo, confirma as alterações
+    mysqli_commit($conexao);
     $_SESSION['success_message'] = "Venda atualizada com sucesso!";
   } catch (Exception $e) {
-    mysqli_rollback($conexao); // Se algo deu errado, desfaz tudo
+    mysqli_rollback($conexao);
     $_SESSION['error_message'] = "Erro ao atualizar venda: " . $e->getMessage();
   }
   header('Location: /masterControl/src/pages/dashboard/vendas.php');

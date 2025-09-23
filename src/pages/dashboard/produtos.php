@@ -59,6 +59,7 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
       <?php require_once '../../includes/components/header.php'; ?>
 
       <main class="p-4 md:p-8 transition-all duration-300 lg:ml-64 group-[.sidebar-closed]:lg:ml-0">
+
         <!--Title e button para add item-->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Gestão de Produtos</h1>
@@ -154,16 +155,16 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                   <?php foreach ($produtosPagina as $produto): ?>
                     <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)] searchable-row">
                       <td class="p-3 font-medium text-[var(--color-text-primary)]">
-                        <?= htmlspecialchars($produto['nome']); ?>
+                        <?= htmlspecialchars($produto['nome'] ?? 'N/A'); ?>
                       </td>
                       <td class="p-3 text-[var(--color-text-secondary)]">
-                        <?= htmlspecialchars($produto['descricao']); ?>
+                        <?= htmlspecialchars($produto['descricao'] ?? 'N/A'); ?>
                       </td>
                       <td class="p-3 text-[var(--color-text-secondary)]">
                         R$ <?= number_format($produto['valor_venda'], 2, ',', '.'); ?>
                       </td>
                       <td class="p-3 text-[var(--color-text-secondary)]">
-                        <?= htmlspecialchars($produto['quantidade']); ?>
+                        <?= htmlspecialchars($produto['quantidade'] ?? 'N/A'); ?>
                       </td>
                       <td class="p-3 text-[var(--color-text-secondary)]">
                         <?= htmlspecialchars($produto['marca_nome'] ?? 'N/A'); ?>
@@ -172,8 +173,8 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                         <?= htmlspecialchars($produto['categoria_nome'] ?? 'N/A'); ?>
                       </td>
 
-                      <!--Actions edit-->
                       <td class="p-3 flex gap-2">
+                        <!--Actions edit-->
                         <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600"
                           data-id="<?= $produto['id'] ?>"
                           data-nome="<?= htmlspecialchars($produto['nome']) ?>"
@@ -205,9 +206,11 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
               <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">
                 Anterior
               </a>
+
               <span class="text-sm text-[var(--color-text-secondary)]">
                 Página <?= $paginaAtual ?> de <?= $totalPaginas ?>
               </span>
+
               <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">
                 Próximo
               </a>

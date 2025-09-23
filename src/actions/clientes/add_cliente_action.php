@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once '../includes/auth_check.php';
-require_once '../../database/index.php';
+require_once '../../includes/auth_check.php';
+require_once '../../../database/index.php';
 
 // Verifica se o método da requisição é POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

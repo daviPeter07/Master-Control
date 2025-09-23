@@ -62,6 +62,7 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
       <main class="p-4 md:p-8 transition-all duration-300 lg:ml-64 group-[.sidebar-closed]:lg:ml-0">
 
+        <!--Title e button para add item-->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Vendas Gerais</h1>
           <button id="open-add-modal-btn" class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
@@ -72,10 +73,12 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
           </button>
         </div>
 
+        <!--Input pesquisa-->
         <div class="mb-6">
           <input type="search" id="searchInput" placeholder="Pesquisar por produto ou cliente..." class="search-input w-full sm:max-w-sm p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 
+        <!--No Data-->
         <div class="bg-[var(--color-surface)] p-4 sm:p-6 rounded-lg shadow-md">
           <?php if (empty($vendasPagina)): ?>
             <div class="text-center py-8">
@@ -83,24 +86,37 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
               <p class="text-[var(--color-text-secondary)] mt-2">Clique em "Adicionar Venda" para começar.</p>
             </div>
           <?php else: ?>
+
+            <!-- Cards Mobile -->
             <div class="grid gap-4 sm:hidden searchable-container">
               <?php foreach ($vendasPagina as $venda): ?>
                 <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
                   <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($venda['produtos']) ?></h2>
                   <p class="text-sm text-[var(--color-text-secondary)]">Cliente: <?= htmlspecialchars($venda['cliente_nome']) ?></p>
+
+                  <!--Actions mobile-->
                   <div class="flex gap-2 mt-2">
+                    <!--Actions edit mobile-->
                     <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 text-sm rounded-lg"
                       data-id="<?= $venda['id'] ?>"
                       data-cliente-id="<?= $venda['cliente_id'] ?>"
                       data-metodo="<?= $venda['metodo_pagamento'] ?>"
-                      data-status="<?= $venda['status_pagamento'] ?>">Editar</button>
+                      data-status="<?= $venda['status_pagamento'] ?>">
+                      Editar
+                    </button>
+
+                    <!--Actions delete mobile-->
                     <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 text-sm rounded-lg"
-                      data-id="<?= $venda['id'] ?>">Deletar</button>
+                      data-id="<?= $venda['id'] ?>"
+                      data-cliente-nome="<?= $venda['cliente_nome'] ?>">
+                      Deletar
+                    </button>
                   </div>
                 </div>
               <?php endforeach; ?>
             </div>
 
+            <!-- Tabela Desktop -->
             <div class="overflow-x-auto hidden sm:block">
               <table class="w-full text-left text-sm sm:text-base min-w-[700px] searchable-table">
                 <thead>
@@ -116,9 +132,15 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 <tbody>
                   <?php foreach ($vendasPagina as $venda): ?>
                     <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-background)] searchable-row">
-                      <td class="p-3 font-medium text-[var(--color-text-primary)]"><?= htmlspecialchars($venda['produtos']) ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= htmlspecialchars($venda['cliente_nome']) ?></td>
-                      <td class="p-3 text-[var(--color-text-secondary)]"><?= date('d/m/Y', strtotime($venda['data_venda'])) ?></td>
+                      <td class="p-3 font-medium text-[var(--color-text-primary)]">
+                        <?= htmlspecialchars($venda['produtos']) ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= htmlspecialchars($venda['cliente_nome']) ?>
+                      </td>
+                      <td class="p-3 text-[var(--color-text-secondary)]">
+                        <?= date('d/m/Y', strtotime($venda['data_venda'])) ?>
+                      </td>
                       <td class="p-3">
                         <?php if ($venda['status_pagamento'] === 'PAGO'): ?>
                           <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Pago</span>
@@ -126,15 +148,25 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                           <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Pendente</span>
                         <?php endif; ?>
                       </td>
-                      <td class="p-3 font-medium text-[var(--color-text-primary)]">R$ <?= number_format($venda['valor_total'], 2, ',', '.') ?></td>
+                      <td class="p-3 font-medium text-[var(--color-text-primary)]">
+                        R$ <?= number_format($venda['valor_total'], 2, ',', '.') ?>
+                      </td>
+
                       <td class="p-3 flex gap-2">
+                        <!--Actions edit-->
                         <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs"
                           data-id="<?= $venda['id'] ?>"
                           data-cliente-id="<?= $venda['cliente_id'] ?>"
                           data-metodo="<?= $venda['metodo_pagamento'] ?>"
-                          data-status="<?= $venda['status_pagamento'] ?>">Editar</button>
+                          data-status="<?= $venda['status_pagamento'] ?>"
+                          data-itens='<?= htmlspecialchars($venda['itens_json']) ?>'> Editar
+                        </button>
+
+                        <!--Actions delete-->
                         <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
-                          data-id="<?= $venda['id'] ?>">Deletar</button>
+                          data-id="<?= $venda['id'] ?>"
+                          data-nome="Venda #<?= $venda['id'] ?>"> Deletar
+                        </button>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -142,10 +174,19 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
               </table>
             </div>
 
+            <!-- Paginação -->
             <div class="mt-4 flex justify-between items-center">
-              <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">Anterior</a>
-              <span class="text-sm text-[var(--color-text-secondary)]">Página <?= $paginaAtual ?> de <?= $totalPaginas ?></span>
-              <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">Próximo</a>
+              <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">
+                Anterior
+              </a>
+
+              <span class="text-sm text-[var(--color-text-secondary)]">
+                Página <?= $paginaAtual ?> de <?= $totalPaginas ?>
+              </span>
+
+              <a href="?pagina=<?= min($totalPaginas, $paginaAtual + 1) ?>" class="pag-next <?= $paginaAtual >= $totalPaginas ? 'disabled' : '' ?>">
+                Próximo
+              </a>
             </div>
           <?php endif; ?>
         </div>

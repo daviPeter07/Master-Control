@@ -367,4 +367,120 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // Lógica Específica para a Página de Vendas
+  if (body.dataset.currentPage === "vendas") {
+    // Configura os 3 modais da página
+    setupModal(
+      "add-venda-modal",
+      "#open-add-modal-btn",
+      ".close-add-modal-btn, .cancel-add-modal-btn"
+    );
+    setupModal(
+      "edit-venda-modal",
+      ".open-edit-modal-btn",
+      ".close-edit-modal-btn, .cancel-edit-modal-btn"
+    );
+    setupModal(
+      "delete-confirm-modal",
+      ".open-delete-modal-btn",
+      "#cancel-delete-btn"
+    );
+
+    // 2. Lógica do modal de ADICIONAR Venda (Itens Dinâmicos)
+    const addItemBtn = document.getElementById("add-item-btn");
+    const itemsContainer = document.getElementById("itens-venda-container");
+    const itemTemplate = document.getElementById("item-venda-template");
+
+    if (addItemBtn && itemsContainer && itemTemplate) {
+      addItemBtn.addEventListener("click", () => {
+        // Clona o template do item e o adiciona ao container
+        const newItemRow = itemTemplate.firstElementChild.cloneNode(true);
+        itemsContainer.appendChild(newItemRow);
+      });
+
+      // Delega o evento de clique para o container para lidar com a remoção de itens
+      itemsContainer.addEventListener("click", (e) => {
+        if (e.target && e.target.classList.contains("remove-item-btn")) {
+          // Encontra o elemento pai (a linha do item) e o remove
+          e.target.closest(".item-venda-row").remove();
+        }
+      });
+    }
+
+    // Lógica do modal de EDITAR Venda (Preenchimento Dinâmico)
+    const editAddItemBtn = document.getElementById("edit-add-item-btn");
+    const editItemsContainer = document.getElementById(
+      "edit-itens-venda-container"
+    );
+    const editItemTemplate = document.getElementById(
+      "edit-item-venda-template"
+    );
+
+    document.querySelectorAll(".open-edit-modal-btn").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const modal = document.getElementById("edit-venda-modal");
+        const data = e.currentTarget.dataset;
+
+        // Preenche os campos principais do formulário
+        modal.querySelector("#edit-venda-id").value = data.id;
+        modal.querySelector("#edit-cliente_id").value = data.clienteId;
+        modal.querySelector("#edit-metodo_pagamento").value = data.metodo;
+        modal.querySelector("#edit-status_pagamento").value = data.status;
+
+        // Limpa os itens de uma edição anterior
+        if (editItemsContainer) editItemsContainer.innerHTML = "";
+
+        // Reconstrói a lista de itens a partir do JSON passado pelo data-itens
+        if (data.itens && editItemTemplate) {
+          try {
+            const items = JSON.parse(data.itens);
+            items.forEach((item) => {
+              const newItemRow =
+                editItemTemplate.firstElementChild.cloneNode(true);
+
+              // Pré-seleciona o produto e a quantidade
+              newItemRow.querySelector(".produto-select").value =
+                item.produto_id;
+              newItemRow.querySelector(".quantidade-input").value =
+                item.quantidade;
+
+              editItemsContainer.appendChild(newItemRow);
+            });
+          } catch (error) {
+            console.error("Erro ao processar os itens da venda:", error);
+          }
+        }
+      });
+    });
+
+    // Lógica para adicionar/remover itens DENTRO do modal de edição
+    if (editAddItemBtn && editItemsContainer && editItemTemplate) {
+      editAddItemBtn.addEventListener("click", () => {
+        const newItemRow = editItemTemplate.firstElementChild.cloneNode(true);
+        editItemsContainer.appendChild(newItemRow);
+      });
+
+      editItemsContainer.addEventListener("click", (e) => {
+        if (e.target && e.target.classList.contains("remove-item-btn")) {
+          e.target.closest(".item-venda-row").remove();
+        }
+      });
+    }
+
+    // Lógica do modal de DELETAR Venda
+    document.querySelectorAll(".open-delete-modal-btn").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const modal = document.getElementById("delete-confirm-modal");
+        const data = e.currentTarget.dataset;
+
+        modal.querySelector(
+          "#delete-confirm-text"
+        ).textContent = `Deseja excluir a Venda #${data.id}? O estoque dos produtos será restaurado.`;
+        modal.querySelector(
+          "#confirm-delete-btn"
+        ).href = `../../actions/vendas/delete_venda_action.php?id=${data.id}`;
+      });
+    });
+  }
 });

@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once '../includes/auth_check.php';
-require_once '../../database/index.php';
+require_once '../../includes/auth_check.php';
+require_once '../../../database/index.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   mysqli_begin_transaction($conexao);

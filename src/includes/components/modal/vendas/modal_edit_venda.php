@@ -4,13 +4,37 @@
       <h2 class="text-xl font-bold text-[var(--color-text-primary)]">Editar Venda</h2>
       <button class="close-edit-modal-btn text-[var(--color-text-secondary)]">X</button>
     </div>
-    <form action="/masterControl/src/actions/vendas/edit_venda_action.php" method="POST" class="flex-grow overflow-y-auto">
+    <form action="../../actions/vendas/edit_venda_action.php" method="POST" class="flex-grow overflow-y-auto">
       <input type="hidden" name="id" id="edit-venda-id">
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="edit-cliente_id" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Cliente</label>
+          <select name="cliente_id" id="edit-cliente_id" required class="w-full p-2 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+            <?php foreach ($clientes as $cliente): ?>
+              <option value="<?= $cliente['id'] ?>"><?= htmlspecialchars($cliente['nome']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div>
+          <label for="edit-metodo_pagamento" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Método de Pagamento</label>
+          <select name="metodo_pagamento" id="edit-metodo_pagamento" required class="w-full p-2 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+            <option value="PIX">PIX</option>
+            <option value="CARTAO_CREDITO">Cartão de Crédito</option>
+            <option value="CARTAO_DEBITO">Cartão de Débito</option>
+            <option value="DINHEIRO">Dinheiro</option>
+            <option value="BOLETO">Boleto</option>
+          </select>
+        </div>
+        <div>
+          <label for="edit-status_pagamento" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Status do Pagamento</label>
+          <select name="status_pagamento" id="edit-status_pagamento" required class="w-full p-2 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+            <option value="PAGO">Pago</option>
+            <option value="PENDENTE">Pendente</option>
+          </select>
+        </div>
       </div>
 
-      <hr class="border-[var(--color-border)] my-4">
 
       <h3 class="text-lg font-semibold mb-2 text-[var(--color-text-primary)]">Itens da Venda</h3>
       <div id="edit-itens-venda-container" class="space-y-2">
@@ -27,13 +51,13 @@
 
 <div id="edit-item-venda-template" class="hidden">
   <div class="flex items-center gap-2 item-venda-row">
-    <select name="produtos[]" class="produto-select ...">
+    <select name="produtos[]" class="produto-select w-1/2 p-2 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
       <option value="">Selecione um produto</option>
       <?php foreach ($produtos as $produto): ?>
         <option value="<?= $produto['id'] ?>"><?= htmlspecialchars($produto['nome']) ?></option>
       <?php endforeach; ?>
     </select>
-    <input type="number" name="quantidades[]" value="1" min="1" class="quantidade-input ...">
+    <input type="number" name="quantidades[]" value="1" min="1" class="quantidade-input w-1/4 p-2 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
     <button type="button" class="remove-item-btn text-red-500">Remover</button>
   </div>
 </div>
