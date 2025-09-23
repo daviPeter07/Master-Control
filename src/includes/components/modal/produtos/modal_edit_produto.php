@@ -9,27 +9,27 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label for="edit-nome" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Nome</label>
-          <input type="text" name="nome" id="edit-nome" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <input type="text" name="nome" id="edit-nome" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="edit-descricao" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Descrição</label>
-          <textarea name="descricao" id="edit-descricao" rows="3" class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]"></textarea>
+          <textarea name="descricao" id="edit-descricao" rows="3" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"></textarea>
         </div>
         <div>
           <label for="edit-valor_custo" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Valor de Custo (R$)</label>
-          <input type="number" step="0.01" name="valor_custo" id="edit-valor_custo" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <input type="number" step="0.01" name="valor_custo" id="edit-valor_custo" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="edit-valor_venda" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Valor de Venda (R$)</label>
-          <input type="number" step="0.01" name="valor_venda" id="edit-valor_venda" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <input type="number" step="0.01" name="valor_venda" id="edit-valor_venda" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="edit-quantidade" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Quantidade em Estoque</label>
-          <input type="number" name="quantidade" id="edit-quantidade" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <input type="number" name="quantidade" id="edit-quantidade" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="edit-genero" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Gênero</label>
-          <select name="genero" id="edit-genero" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <select name="genero" id="edit-genero" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <option value="UNISSEX">Unissex</option>
             <option value="FEM">Feminino</option>
             <option value="MASC">Masculino</option>
@@ -37,7 +37,7 @@
         </div>
         <div>
           <label for="edit-marca_id" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Marca</label>
-          <select name="marca_id" id="edit-marca_id" class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <select name="marca_id" id="edit-marca_id" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <option value="">Nenhuma</option>
             <?php foreach ($marcas as $marca): ?>
               <option value="<?= $marca['id'] ?>"><?= htmlspecialchars($marca['nome']) ?></option>
@@ -46,7 +46,7 @@
         </div>
         <div>
           <label for="edit-categoria_id" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Categoria</label>
-          <select name="categoria_id" id="edit-categoria_id" class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <select name="categoria_id" id="edit-categoria_id" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <option value="">Nenhuma</option>
             <?php foreach ($categorias as $categoria): ?>
               <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>

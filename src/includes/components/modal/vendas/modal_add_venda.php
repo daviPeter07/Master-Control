@@ -8,7 +8,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div>
           <label for="cliente_id" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Cliente</label>
-          <select name="cliente_id" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <select name="cliente_id" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <?php foreach ($clientes as $cliente): ?>
               <option value="<?= $cliente['id'] ?>"><?= htmlspecialchars($cliente['nome']) ?></option>
             <?php endforeach; ?>
@@ -16,7 +16,7 @@
         </div>
         <div>
           <label for="metodo_pagamento" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Método de Pagamento</label>
-          <select name="metodo_pagamento" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <select name="metodo_pagamento" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <option value="PIX">PIX</option>
             <option value="CARTAO_CREDITO">Cartão de Crédito</option>
             <option value="CARTAO_DEBITO">Cartão de Débito</option>
@@ -26,7 +26,7 @@
         </div>
         <div>
           <label for="status_pagamento" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Status do Pagamento</label>
-          <select name="status_pagamento" required class="w-full p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <select name="status_pagamento" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <option value="PAGO">Pago</option>
             <option value="PENDENTE">Pendente</option>
           </select>
@@ -50,13 +50,13 @@
 
 <div id="item-venda-template" class="hidden">
   <div class="flex items-center gap-2 item-venda-row">
-    <select name="produtos[]" class="produto-select w-1/2 p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+    <select name="produtos[]" class="produto-select w-1/2 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
       <option value="">Selecione um produto</option>
       <?php foreach ($produtos as $produto): ?>
         <option value="<?= $produto['id'] ?>" data-preco="<?= $produto['valor_venda'] ?>"><?= htmlspecialchars($produto['nome']) ?></option>
       <?php endforeach; ?>
     </select>
-    <input type="number" name="quantidades[]" value="1" min="1" class="quantidade-input w-1/4 p-2 border rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+    <input type="number" name="quantidades[]" value="1" min="1" class="quantidade-input w-1/4 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
     <button type="button" class="remove-item-btn text-red-500">Remover</button>
   </div>
 </div>
