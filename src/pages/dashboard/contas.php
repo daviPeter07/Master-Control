@@ -69,7 +69,7 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
         <!--Title e button para add item-->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Contas a Receber</h1>
-          <button class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
+          <button  id="open-add-modal-btn" class="bg-[var(--color-primary)] text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition-opacity flex items-center gap-2">
             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
@@ -95,7 +95,7 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <div class="grid gap-4 sm:hidden searchable-container">
               <?php foreach ($contasPagina as $conta): ?>
                 <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
-                  <h2 class="font-semibold text-[var(--color-text-primary)]">
+                  <h2 class="font-semibold text-[var(--color-text-primary)] mb-2">
                     <?= htmlspecialchars($conta['cliente_nome']) ?>
                   </h2>
                   <p class="text-sm text-[var(--color-text-secondary)]">
@@ -120,20 +120,19 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                   <div class="flex gap-2 mt-2">
 
                     <!--Actions edit mobile-->
-                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-600"
+                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs"
                       data-id="<?= $conta['id'] ?>"
-                      data-cliente-nome="<?= htmlspecialchars($conta['cliente_nome']) ?>"
-                      data-valor-total="<?= htmlspecialchars($conta['valor_total']) ?>"
-                      data-metodo-pagamento="<?= $conta['metodo_pagamento'] ?>"
-                      data-data-venda="<?= $conta['data_venda'] ?>"
-                      data-status-pagamento="<?= $conta['status_pagamento'] ?>">
+                      data-cliente-id="<?= $conta['cliente_id'] ?>"
+                      data-metodo="<?= $conta['metodo_pagamento'] ?>"
+                      data-status="<?= $conta['status_pagamento'] ?>"
+                      data-itens='<?= htmlspecialchars($conta['itens_json'] ?? '[]') ?>'>
                       Editar
                     </button>
 
                     <!--Actions delete mobile-->
-                    <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600"
-                      data-id="<?= $produto['id'] ?>"
-                      data-cliente-nome="<?= htmlspecialchars($produto['cliente_nome']) ?>">
+                    <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
+                      data-id="<?= $conta['id'] ?>"
+                      data-nome="Conta #<?= $conta['id'] ?>">
                       Deletar
                     </button>
                   </div>

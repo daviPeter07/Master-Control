@@ -57,7 +57,7 @@ while ($row = mysqli_fetch_assoc($result)) {
       <?php require_once '../../includes/components/header.php'; ?>
 
       <main class="p-4 md:p-8 transition-all duration-300 lg:ml-64 group-[.sidebar-closed]:lg:ml-0">
-        
+
         <!--Title e button para add item-->
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <h1 class="text-3xl font-bold text-[var(--color-text-primary)]">Gestão de Clientes</h1>
@@ -103,7 +103,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                   <!--Actions mobile-->
                   <div class="flex gap-2 mt-2">
                     <!--Actions edit mobile-->
-                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs"
+                    <button
+                      class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-blue-600 text-xs"
                       data-id="<?= $cliente['id'] ?>"
                       data-nome="<?= htmlspecialchars($cliente['nome']) ?>"
                       data-tipo="<?= $cliente['tipo_cliente'] ?>"

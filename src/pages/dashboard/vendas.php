@@ -91,25 +91,44 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
             <div class="grid gap-4 sm:hidden searchable-container">
               <?php foreach ($vendasPagina as $venda): ?>
                 <div class="p-4 border border-[var(--color-border)] rounded-lg searchable-item">
-                  <h2 class="font-semibold text-[var(--color-text-primary)]"><?= htmlspecialchars($venda['produtos']) ?></h2>
-                  <p class="text-sm text-[var(--color-text-secondary)]">Cliente: <?= htmlspecialchars($venda['cliente_nome']) ?></p>
+
+                  <h2 class="font-semibold text-[var(--color-text-primary)] mb-2">
+                    <?= htmlspecialchars($venda['produtos'] ?? 'Venda sem itens') ?>
+                  </h2>
+
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    <strong>Cliente:</strong> <?= htmlspecialchars($venda['cliente_nome']) ?>
+                  </p>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    <strong>Valor:</strong> R$ <?= number_format($venda['valor_total'], 2, ',', '.') ?>
+                  </p>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    <strong>Data:</strong> <?= date('d/m/Y', strtotime($venda['data_venda'])) ?>
+                  </p>
+                  <p class="text-sm text-[var(--color-text-secondary)]">
+                    <strong>Status:</strong>
+                    <?php if ($venda['status_pagamento'] === 'PAGO'): ?>
+                      <span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Pago</span>
+                    <?php else: ?>
+                      <span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Pendente</span>
+                    <?php endif; ?>
+                  </p>
 
                   <!--Actions mobile-->
                   <div class="flex gap-2 mt-2">
                     <!--Actions edit mobile-->
-                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 text-sm rounded-lg"
+                    <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs"
                       data-id="<?= $venda['id'] ?>"
                       data-cliente-id="<?= $venda['cliente_id'] ?>"
                       data-metodo="<?= $venda['metodo_pagamento'] ?>"
-                      data-status="<?= $venda['status_pagamento'] ?>">
-                      Editar
+                      data-status="<?= $venda['status_pagamento'] ?>"
+                      data-itens='<?= htmlspecialchars($venda['itens_json']) ?>'> Editar
                     </button>
 
                     <!--Actions delete mobile-->
-                    <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 text-sm rounded-lg"
+                    <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
                       data-id="<?= $venda['id'] ?>"
-                      data-cliente-nome="<?= $venda['cliente_nome'] ?>">
-                      Deletar
+                      data-nome="Venda #<?= $venda['id'] ?>"> Deletar
                     </button>
                   </div>
                 </div>
