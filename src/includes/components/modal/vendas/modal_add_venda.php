@@ -4,7 +4,7 @@
       <h2 class="text-xl font-bold text-[var(--color-text-primary)]">Registrar Nova Venda</h2>
       <button class="close-add-modal-btn text-[var(--color-text-secondary)]">X</button>
     </div>
-    <form action="/masterControl/src/actions/vendas/add_venda_action.php" method="POST" class="flex-grow overflow-y-auto">
+    <form action="/src/actions/vendas/add_venda_action.php" method="POST" class="flex-grow overflow-y-auto">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div>
           <div class="flex items-center justify-between mb-1">

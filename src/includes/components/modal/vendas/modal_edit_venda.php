@@ -4,7 +4,7 @@
       <h2 class="text-xl font-bold text-[var(--color-text-primary)]">Editar Venda</h2>
       <button class="close-edit-modal-btn text-[var(--color-text-secondary)]">X</button>
     </div>
-    <form action="../../actions/vendas/edit_venda_action.php" method="POST" class="flex-grow overflow-y-auto">
+    <form action="/src/actions/vendas/edit_venda_action.php" method="POST" class="flex-grow overflow-y-auto">
       <input type="hidden" name="id" id="edit-venda-id">
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">

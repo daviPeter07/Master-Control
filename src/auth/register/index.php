@@ -37,7 +37,7 @@ session_start();
         </p>
       </div>
 
-      <form action="../../actions/auth/process_register.php" method="POST" class="space-y-4">
+      <form action="/src/actions/auth/process_register.php" method="POST" class="space-y-4">
         <div>
           <label
             for="fullName"
