@@ -58,7 +58,7 @@
         <option value="<?= $produto['id'] ?>"><?= htmlspecialchars($produto['nome']) ?></option>
       <?php endforeach; ?>
     </select>
-    <input type="number" name="quantidades[]" value="1" min="1" class="quantidade-input w-1/4 p-2 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+    <input type="text" name="quantidades[]" value="1" placeholder="1" class="number-input w-1/4 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
     <button type="button" class="remove-item-btn text-red-500">Remover</button>
   </div>
 </div>

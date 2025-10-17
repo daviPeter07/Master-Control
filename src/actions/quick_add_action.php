@@ -6,13 +6,28 @@ header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   try {
+    // Função para limpar dados formatados
+    function cleanFormattedData($data) {
+      return preg_replace('/[^\d]/', '', $data);
+    }
+
+    function cleanCurrencyValue($value) {
+      $value = str_replace(['R$', ' ', '.'], '', $value);
+      $value = str_replace(',', '.', $value);
+      return floatval($value);
+    }
+
+    function cleanNumberValue($value) {
+      return intval(str_replace('.', '', $value));
+    }
+
     $action = $_POST['action'] ?? '';
     
     if ($action === 'quick_add_cliente') {
       // Cadastro rápido de cliente
       $nome = trim($_POST['nome']);
       $tipo_cliente = $_POST['tipo_cliente'];
-      $telefone = trim($_POST['telefone']) ?: null;
+      $telefone = trim($_POST['telefone']) ? cleanFormattedData($_POST['telefone']) : null;
       
       if (empty($nome) || empty($tipo_cliente)) {
         throw new Exception("Nome e Tipo de Cliente são obrigatórios.");
@@ -46,8 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       // Cadastro rápido de produto
       $nome = trim($_POST['nome']);
       $descricao = trim($_POST['descricao']) ?: '';
-      $valor_venda = floatval($_POST['valor_venda']);
-      $quantidade = intval($_POST['quantidade']);
+      $valor_venda = cleanCurrencyValue($_POST['valor_venda']);
+      $quantidade = cleanNumberValue($_POST['quantidade']);
       
       if (empty($nome) || $valor_venda <= 0) {
         throw new Exception("Nome e Valor de Venda são obrigatórios.");

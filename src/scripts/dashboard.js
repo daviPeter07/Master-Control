@@ -437,10 +437,8 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.querySelector("#edit-metodo_pagamento").value = data.metodo;
         modal.querySelector("#edit-status_pagamento").value = data.status;
 
-        // Limpa os itens de uma edição anterior
         if (editItemsContainer) editItemsContainer.innerHTML = "";
 
-        // Reconstrói a lista de itens a partir do JSON passado pelo data-itens
         if (data.itens && editItemTemplate) {
           try {
             const items = JSON.parse(data.itens);
@@ -448,11 +446,15 @@ document.addEventListener("DOMContentLoaded", () => {
               const newItemRow =
                 editItemTemplate.firstElementChild.cloneNode(true);
 
-              // Pré-seleciona o produto e a quantidade
-              newItemRow.querySelector(".produto-select").value =
-                item.produto_id;
-              newItemRow.querySelector(".quantidade-input").value =
-                item.quantidade;
+              const produtoSelect = newItemRow.querySelector(".produto-select");
+              const quantidadeInput = newItemRow.querySelector(".number-input");
+
+              if (produtoSelect) {
+                produtoSelect.value = item.produto_id;
+              }
+              if (quantidadeInput) {
+                quantidadeInput.value = item.quantidade;
+              }
 
               editItemsContainer.appendChild(newItemRow);
             });
@@ -705,12 +707,8 @@ function setupQuickAddHandlers() {
             "quick-add-produto-modal"
           );
           if (quickProdutoModal) {
-            console.log("Fechando modal de produto...");
             quickProdutoModal.style.display = "none";
             e.target.reset();
-            console.log("Modal de produto fechado e formulário resetado");
-          } else {
-            console.log("Modal de produto não encontrado para fechar");
           }
 
           // Sucesso - modal já foi fechado

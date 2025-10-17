@@ -14,7 +14,7 @@
       <div class="space-y-4">
         <div>
           <label for="nome" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Nome Completo</label>
-          <input type="text" name="nome" id="nome" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="text" name="nome" id="nome" required placeholder="Nome completo" class="name-input w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 
         <div>
@@ -27,7 +27,7 @@
 
         <div>
           <label for="telefone" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Telefone (Opcional)</label>
-          <input type="tel" name="telefone" id="telefone" placeholder="(92) 99999-9999" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="tel" name="telefone" id="telefone" placeholder="Telefone (opcional)" class="phone-input w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
 
         <div class="flex justify-end gap-4 pt-2">

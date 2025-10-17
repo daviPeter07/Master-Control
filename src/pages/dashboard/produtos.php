@@ -236,6 +236,7 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
       }
     });
   </script>
+  <script src="../../scripts/formatters.js"></script>
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

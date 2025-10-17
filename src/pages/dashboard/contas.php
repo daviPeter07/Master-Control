@@ -3,16 +3,13 @@ require_once '../../includes/auth_check.php';
 require_once '../../../database/index.php';
 $currentPage = "contas";
 
-// buscar dados
 $clientesResult = mysqli_query($conexao, "SELECT id, nome FROM clientes ORDER BY nome ASC");
 $clientes = mysqli_fetch_all($clientesResult, MYSQLI_ASSOC);
-$produtosResult = mysqli_query($conexao, "SELECT id, nome, valor_venda FROM produtos WHERE quantidade > 0 ORDER BY nome ASC");
+$produtosResult = mysqli_query($conexao, "SELECT id, nome, valor_venda FROM produtos ORDER BY nome ASC");
 $produtos = mysqli_fetch_all($produtosResult, MYSQLI_ASSOC);
 
-// Definir itens por página
 $itensPorPagina = 5;
 
-// Contar o total de contas (vendas) no banco
 $totalContasSql = "SELECT COUNT(id) AS total FROM vendas";
 $totalResult = mysqli_query($conexao, $totalContasSql);
 $totalContas = mysqli_fetch_assoc($totalResult)['total'];
@@ -20,7 +17,6 @@ $totalPaginas = $totalContas > 0 ? ceil($totalContas / $itensPorPagina) : 1;
 $paginaAtual = isset($_GET['pagina']) ? max(1, min((int)$_GET['pagina'], $totalPaginas)) : 1;
 $inicio = ($paginaAtual - 1) * $itensPorPagina;
 
-// Query para buscar as contas da página atual, com todos os dados necessários
 $contasPaginaSql = "
     SELECT
         v.id,
@@ -119,7 +115,6 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                   <!--Actions mobile-->
                   <div class="flex gap-2 mt-2">
 
-                    <!--Actions edit mobile-->
                     <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs"
                       data-id="<?= $conta['id'] ?>"
                       data-cliente-id="<?= $conta['cliente_id'] ?>"
@@ -129,7 +124,6 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                       Editar
                     </button>
 
-                    <!--Actions delete mobile-->
                     <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
                       data-id="<?= $conta['id'] ?>"
                       data-nome="Conta #<?= $conta['id'] ?>">
@@ -140,7 +134,6 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
               <?php endforeach; ?>
             </div>
 
-            <!-- Tabela Desktop -->
             <div class="overflow-x-auto hidden sm:block">
               <table class="w-full text-left text-sm sm:text-base min-w-[700px] searchable-table">
                 <thead>
@@ -178,7 +171,6 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
                       <td class="p-3 flex gap-2">
 
-                        <!--Actions edit-->
                         <button class="open-edit-modal-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-xs"
                           data-id="<?= $conta['id'] ?>"
                           data-cliente-id="<?= $conta['cliente_id'] ?>"
@@ -188,7 +180,6 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
                           Editar
                         </button>
 
-                        <!--Actions delete-->
                         <button class="open-delete-modal-btn bg-red-500 text-white px-3 py-1 rounded-lg text-xs"
                           data-id="<?= $conta['id'] ?>"
                           data-nome="Conta #<?= $conta['id'] ?>">
@@ -201,7 +192,6 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
               </table>
             </div>
 
-            <!-- Paginação -->
             <div class="mt-4 flex justify-between items-center">
               <a href="?pagina=<?= max(1, $paginaAtual - 1) ?>" class="pag-prev <?= $paginaAtual <= 1 ? 'disabled' : '' ?>">
                 Anterior
@@ -228,7 +218,6 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
   ?>
 
   <script>
-    // Restaurar estado da sidebar imediatamente
     document.addEventListener('DOMContentLoaded', function() {
       const savedSidebarState = localStorage.getItem('sidebarState');
       if (savedSidebarState === 'closed') {
@@ -236,6 +225,7 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
       }
     });
   </script>
+  <script src="../../scripts/formatters.js"></script>
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

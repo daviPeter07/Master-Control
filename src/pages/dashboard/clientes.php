@@ -210,6 +210,7 @@ while ($row = mysqli_fetch_assoc($result)) {
       }
     });
   </script>
+  <script src="../../scripts/formatters.js"></script>
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

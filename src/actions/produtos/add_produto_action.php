@@ -4,12 +4,25 @@ require_once '../../includes/auth_check.php';
 require_once '../../../database/index.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Função para limpar dados formatados
+  function cleanCurrencyValue($value) {
+    // Remove símbolos de moeda e formatação
+    $value = str_replace(['R$', ' ', '.'], '', $value);
+    $value = str_replace(',', '.', $value);
+    return floatval($value);
+  }
+
+  function cleanNumberValue($value) {
+    // Remove separadores de milhares
+    return intval(str_replace('.', '', $value));
+  }
+
   // Coleta e valida os dados
   $nome = trim($_POST['nome']);
   $descricao = trim($_POST['descricao']);
-  $valor_custo = $_POST['valor_custo'];
-  $valor_venda = $_POST['valor_venda'];
-  $quantidade = $_POST['quantidade'];
+  $valor_custo = cleanCurrencyValue($_POST['valor_custo']);
+  $valor_venda = cleanCurrencyValue($_POST['valor_venda']);
+  $quantidade = cleanNumberValue($_POST['quantidade']);
   $genero = $_POST['genero'];
   $marca_id = !empty($_POST['marca_id']) ? $_POST['marca_id'] : null;
   $categoria_id = !empty($_POST['categoria_id']) ? $_POST['categoria_id'] : null;

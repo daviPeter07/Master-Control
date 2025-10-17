@@ -6,10 +6,17 @@ require_once '../../../database/index.php';
 // Verifica se o método da requisição é POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+  // Função para limpar dados formatados
+  function cleanFormattedData($data) {
+    // Remove formatação de telefone
+    $data = preg_replace('/[^\d]/', '', $data);
+    return $data;
+  }
+
   // Coleta e sanitiza os dados do formulário
   $nome = trim($_POST['nome']);
   $tipo_cliente = $_POST['tipo_cliente'];
-  $telefone = trim($_POST['telefone']) ?: null; // Define como null se estiver vazio
+  $telefone = trim($_POST['telefone']) ? cleanFormattedData($_POST['telefone']) : null; // Define como null se estiver vazio
 
   // Validação
   if (empty($nome) || empty($tipo_cliente)) {

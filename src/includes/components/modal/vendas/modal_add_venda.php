@@ -70,7 +70,7 @@
       </div>
       <input type="text" name="produtos_livres[]" placeholder="Nome do produto" class="produto-livre-input w-1/4 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] hidden">
       <input type="number" name="precos_livres[]" placeholder="Preço" step="0.01" min="0" class="preco-livre-input w-20 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] hidden">
-      <input type="number" name="quantidades[]" value="1" min="1" class="quantidade-input w-16 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+      <input type="text" name="quantidades[]" value="1" class="number-input w-16 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
       <button type="button" class="remove-item-btn text-red-500 hover:bg-red-50 px-2 py-1 rounded">Remover</button>
     </div>
 
@@ -89,7 +89,7 @@
       <div class="flex gap-2">
         <input type="text" name="produtos_livres[]" placeholder="Nome do produto" class="produto-livre-input flex-1 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] hidden">
         <input type="number" name="precos_livres[]" placeholder="Preço" step="0.01" min="0" class="preco-livre-input w-20 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)] hidden">
-        <input type="number" name="quantidades[]" value="1" min="1" class="quantidade-input w-16 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+        <input type="text" name="quantidades[]" value="1" class="number-input w-16 p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         <button type="button" class="remove-item-btn text-red-500 hover:bg-red-50 px-2 py-1 rounded text-xs">Remover</button>
       </div>
     </div>
@@ -107,7 +107,7 @@
       <div class="space-y-4">
         <div>
           <label for="quick_nome" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Nome *</label>
-          <input type="text" id="quick_nome" name="nome" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="text" id="quick_nome" name="nome" required placeholder="Nome completo" class="name-input w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="quick_tipo_cliente" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Tipo de Cliente *</label>
@@ -119,7 +119,7 @@
         </div>
         <div>
           <label for="quick_telefone" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Telefone</label>
-          <input type="text" id="quick_telefone" name="telefone" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="tel" id="quick_telefone" name="telefone" placeholder="Telefone (opcional)" class="phone-input w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
       </div>
       <div class="flex justify-end gap-4 mt-6">
@@ -141,19 +141,19 @@
       <div class="space-y-4">
         <div>
           <label for="quick_produto_nome" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Nome *</label>
-          <input type="text" id="quick_produto_nome" name="nome" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="text" id="quick_produto_nome" name="nome" required placeholder="Nome do produto" class="name-input w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="quick_produto_descricao" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Descrição</label>
-          <input type="text" id="quick_produto_descricao" name="descricao" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="text" id="quick_produto_descricao" name="descricao" placeholder="Descrição do produto" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="quick_produto_valor_venda" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Valor de Venda *</label>
-          <input type="number" id="quick_produto_valor_venda" name="valor_venda" step="0.01" min="0" required class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="text" id="quick_produto_valor_venda" name="valor_venda" required placeholder="R$ 0,00" class="currency-input w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
         <div>
           <label for="quick_produto_quantidade" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Quantidade em Estoque</label>
-          <input type="number" id="quick_produto_quantidade" name="quantidade" min="0" value="0" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+          <input type="text" id="quick_produto_quantidade" name="quantidade" value="0" placeholder="0" class="number-input w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
         </div>
       </div>
       <div class="flex justify-end gap-4 mt-6">
