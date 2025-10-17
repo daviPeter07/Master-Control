@@ -1,6 +1,5 @@
 # Environment files
 .env
-database/env.php
 
 # Logs
 *.log
