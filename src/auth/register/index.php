@@ -10,7 +10,7 @@ session_start();
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Master Control - Registro</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../../styles/styles.css" />
+  <link rel="stylesheet" href="/src/styles/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -117,7 +117,7 @@ session_start();
       <div class="text-center text-sm text-[var(--color-text-secondary)]">
         Já tem uma conta?
         <a
-          href="../login"
+          href="/src/auth/login"
           class="font-medium text-[var(--color-primary)] hover:underline">Faça login aqui</a>
       </div>
     </div>

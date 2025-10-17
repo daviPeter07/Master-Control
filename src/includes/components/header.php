@@ -35,7 +35,7 @@
       </span>
 
       <!-- Botão Sair -->
-      <a href="../../actions/auth/logout.php" class="text-red-500 hover:underline text-sm font-semibold whitespace-nowrap">
+      <a href="/src/actions/auth/logout.php" class="text-red-500 hover:underline text-sm font-semibold whitespace-nowrap">
         Sair
       </a>
 

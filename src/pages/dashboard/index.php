@@ -85,8 +85,8 @@ while ($row = mysqli_fetch_assoc($ultimasVendasResult)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Master Control</title>
-  <script src="../../scripts/theme.js"></script>
-  <link rel="stylesheet" href="../../styles/styles.css">
+  <script src="/src/scripts/theme.js"></script>
+  <link rel="stylesheet" href="/src/styles/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -193,8 +193,8 @@ while ($row = mysqli_fetch_assoc($ultimasVendasResult)) {
       }
     });
   </script>
-  <script src="../../scripts/formatters.js"></script>
-  <script src="../../scripts/dashboard.js"></script>
+  <script src="/src/scripts/formatters.js"></script>
+  <script src="/src/scripts/dashboard.js"></script>
 </body>
 
 </html>
