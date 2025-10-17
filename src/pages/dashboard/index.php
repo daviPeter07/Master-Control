@@ -86,9 +86,9 @@ while ($row = mysqli_fetch_assoc($ultimasVendasResult)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Master Control</title>
   <script src="../../scripts/theme.js"></script>
-  <link rel="stylesheet" href="/src/styles/styles.css">
+  <link rel="stylesheet" href="../../styles/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="/src/styles/tailwind.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     const vendasPorDiaLabels = <?php echo json_encode($vendasPorDiaLabels); ?>;
     const vendasPorDiaData = <?php echo json_encode($vendasPorDiaData); ?>;

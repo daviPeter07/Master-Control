@@ -47,8 +47,8 @@ $produtosPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produtos - Master Control</title>
   <script src="../../scripts/theme.js"></script>
-  <link rel="stylesheet" href="/src/styles/styles.css">
-  <link rel="stylesheet" href="/src/styles/tailwind.css">
+  <link rel="stylesheet" href="../../styles/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-[var(--color-background)] group" data-current-page="produtos">
