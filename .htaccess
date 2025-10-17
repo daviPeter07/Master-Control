@@ -1,0 +1,25 @@
+RewriteEngine On
+
+# Redirecionar raiz para login
+RewriteRule ^$ src/auth/login/index.php [L]
+
+# Redirecionar /login para página de login
+RewriteRule ^login/?$ src/auth/login/index.php [L]
+
+# Redirecionar /register para página de registro
+RewriteRule ^register/?$ src/auth/register/index.php [L]
+
+# Redirecionar /dashboard para dashboard
+RewriteRule ^dashboard/?$ src/pages/dashboard/index.php [L]
+
+# Redirecionar /clientes para página de clientes
+RewriteRule ^clientes/?$ src/pages/dashboard/clientes.php [L]
+
+# Redirecionar /produtos para página de produtos
+RewriteRule ^produtos/?$ src/pages/dashboard/produtos.php [L]
+
+# Redirecionar /vendas para página de vendas
+RewriteRule ^vendas/?$ src/pages/dashboard/vendas.php [L]
+
+# Redirecionar /contas para página de contas
+RewriteRule ^contas/?$ src/pages/dashboard/contas.php [L]
