@@ -50,9 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
   // Insere o novo usuário no banco de dados
-  $sql_insert = "INSERT INTO usuarios (nome, email, senha_hash, tipo_conta) VALUES (?, ?, ?, ?)";
+  $sql_insert = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
   $stmt_insert = mysqli_prepare($conexao, $sql_insert);
-  mysqli_stmt_bind_param($stmt_insert, "ssss", $fullName, $email, $hashedPassword, $accountType);
+  mysqli_stmt_bind_param($stmt_insert, "sss", $fullName, $email, $hashedPassword);
 
   if (mysqli_stmt_execute($stmt_insert)) {
     $_SESSION['success_message'] = "Registro realizado com sucesso! Por favor, faça o login.";
