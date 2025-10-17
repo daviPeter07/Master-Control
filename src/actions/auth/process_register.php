@@ -14,22 +14,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Validação dos dados
   if (empty($fullName) || empty($email) || empty($password) || empty($accountType)) {
     $_SESSION['error_message'] = "Todos os campos são obrigatórios.";
-    header("Location: /masterControl/src/auth/register/index.php");
+    header("Location: ../../auth/register/index.php");
     exit();
   }
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $_SESSION['error_message'] = "O formato do email é inválido.";
-    header("Location: /masterControl/src/auth/register/index.php");
+    header("Location: ../../auth/register/index.php");
     exit();
   }
   if ($password !== $confirmPassword) {
     $_SESSION['error_message'] = "As senhas não coincidem.";
-    header("Location: /masterControl/src/auth/register/index.php");
+    header("Location: ../../auth/register/index.php");
     exit();
   }
   if (strlen($password) < 6) {
     $_SESSION['error_message'] = "A senha deve ter no mínimo 6 caracteres.";
-    header("Location: /masterControl/src/auth/register/index.php");
+    header("Location: ../../auth/register/index.php");
     exit();
   }
 
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if (mysqli_stmt_num_rows($stmt_check) > 0) {
     $_SESSION['error_message'] = "Este email já está cadastrado. Tente fazer o login.";
-    header("Location: /masterControl/src/auth/register/index.php");
+    header("Location: ../../auth/register/index.php");
     exit();
   }
   mysqli_stmt_close($stmt_check);
@@ -57,17 +57,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (mysqli_stmt_execute($stmt_insert)) {
     $_SESSION['success_message'] = "Registro realizado com sucesso! Por favor, faça o login.";
     mysqli_stmt_close($stmt_insert);
-    header("Location: /masterControl/src/auth/login/index.php");
+    header("Location: ../../auth/login/index.php");
     exit();
   } else {
     $_SESSION['error_message'] = "Ocorreu um erro inesperado ao criar a conta. Tente novamente.";
     mysqli_stmt_close($stmt_insert);
-    header("Location: /masterControl/src/auth/register/index.php");
+    header("Location: ../../auth/register/index.php");
     exit();
   }
 
 } else {
   // Se o script for acessado diretamente
-  header("Location: /masterControl/src/auth/register/index.php");
+  header("Location: ../../auth/register/index.php");
   exit();
 }

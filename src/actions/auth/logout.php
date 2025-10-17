@@ -3,5 +3,5 @@ session_start();
 session_unset();
 session_destroy();
 
-header("Location: /masterControl/src/auth/login/index.php");
+header("Location: ../../auth/login/index.php");
 exit();
