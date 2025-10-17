@@ -86,9 +86,9 @@ while ($row = mysqli_fetch_assoc($ultimasVendasResult)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Master Control</title>
   <script src="../../scripts/theme.js"></script>
-  <link rel="stylesheet" href="../../styles/styles.css">
+  <link rel="stylesheet" href="/src/styles/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/src/styles/tailwind.css">
   <script>
     const vendasPorDiaLabels = <?php echo json_encode($vendasPorDiaLabels); ?>;
     const vendasPorDiaData = <?php echo json_encode($vendasPorDiaData); ?>;
@@ -112,7 +112,7 @@ while ($row = mysqli_fetch_assoc($ultimasVendasResult)) {
           <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md" role="alert">
             <p class="font-bold">Nenhuma venda encontrada!</p>
             <p>Parece que você ainda não realizou nenhuma venda. 
-              <a href="./vendas.php" class="font-bold underline">Que tal começar agora?</a> </p>
+              <a href="/src/pages/dashboard/vendas.php" class="font-bold underline">Que tal começar agora?</a> </p>
           </div>
         <?php else: ?>
           <div class="flex gap-2 mb-6">
