@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
   }
 
-  $sql = "SELECT id, nome, senha_hash FROM usuarios WHERE email = ?";
+  $sql = "SELECT id, nome, senha FROM usuarios WHERE email = ?";
   $stmt = mysqli_prepare($conexao, $sql);
 
   mysqli_stmt_bind_param($stmt, "s", $email);
@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $result = mysqli_stmt_get_result($stmt);
   $user = mysqli_fetch_assoc($result);
 
-  if ($user && password_verify($password, $user['senha_hash'])) {
+  if ($user && password_verify($password, $user['senha'])) {
 
     session_regenerate_id(true);
 
