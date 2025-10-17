@@ -6,7 +6,7 @@ $currentPage = "vendas";
 // Busca clientes e produtos para preencher os <select>
 $clientesResult = mysqli_query($conexao, "SELECT id, nome FROM clientes ORDER BY nome ASC");
 $clientes = mysqli_fetch_all($clientesResult, MYSQLI_ASSOC);
-$produtosResult = mysqli_query($conexao, "SELECT id, nome, valor_venda FROM produtos WHERE quantidade > 0 ORDER BY nome ASC");
+$produtosResult = mysqli_query($conexao, "SELECT id, nome, valor_venda FROM produtos ORDER BY nome ASC");
 $produtos = mysqli_fetch_all($produtosResult, MYSQLI_ASSOC);
 
 // Paginação (sem alterações)
@@ -22,14 +22,15 @@ $inicio = ($paginaAtual - 1) * $itensPorPagina;
 $vendasPaginaSql = "
     SELECT
         v.id, v.cliente_id, v.data_venda, v.status_pagamento, v.metodo_pagamento, v.valor_total,
-        c.nome AS cliente_nome,
-        GROUP_CONCAT(DISTINCT p.nome SEPARATOR ', ') AS produtos,
+        COALESCE(c.nome, 'Cliente Avulso') AS cliente_nome,
+        GROUP_CONCAT(DISTINCT COALESCE(p.nome, ivl.nome_produto) SEPARATOR ', ') AS produtos,
         (SELECT CONCAT('[', GROUP_CONCAT(JSON_OBJECT('produto_id', iv.produto_id, 'quantidade', iv.quantidade)), ']')
          FROM itens_venda iv WHERE iv.venda_id = v.id) AS itens_json
     FROM vendas v
-    JOIN clientes c ON v.cliente_id = c.id
+    LEFT JOIN clientes c ON v.cliente_id = c.id
     LEFT JOIN itens_venda iv ON v.id = iv.venda_id
     LEFT JOIN produtos p ON iv.produto_id = p.id
+    LEFT JOIN itens_venda_livres ivl ON v.id = ivl.venda_id
     GROUP BY v.id
     ORDER BY v.data_venda DESC
     LIMIT ?, ?
@@ -219,6 +220,15 @@ $vendasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
   require_once '../../includes/components/modal/modal_delete_confirm.php';
   ?>
 
+  <script>
+    // Restaurar estado da sidebar imediatamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedSidebarState = localStorage.getItem('sidebarState');
+      if (savedSidebarState === 'closed') {
+        document.body.classList.add('sidebar-closed');
+      }
+    });
+  </script>
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

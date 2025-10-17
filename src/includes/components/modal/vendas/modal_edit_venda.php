@@ -10,7 +10,8 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div>
           <label for="edit-cliente_id" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Cliente</label>
-          <select name="cliente_id" id="edit-cliente_id" required class="w-full p-2 rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)]">
+          <select name="cliente_id" id="edit-cliente_id" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
+            <option value="">Cliente Avulso</option>
             <?php foreach ($clientes as $cliente): ?>
               <option value="<?= $cliente['id'] ?>"><?= htmlspecialchars($cliente['nome']) ?></option>
             <?php endforeach; ?>

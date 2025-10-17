@@ -184,6 +184,15 @@ while ($row = mysqli_fetch_assoc($ultimasVendasResult)) {
     </div>
   </div>
 
+  <script>
+    // Restaurar estado da sidebar imediatamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedSidebarState = localStorage.getItem('sidebarState');
+      if (savedSidebarState === 'closed') {
+        document.body.classList.add('sidebar-closed');
+      }
+    });
+  </script>
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

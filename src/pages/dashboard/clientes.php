@@ -201,6 +201,15 @@ while ($row = mysqli_fetch_assoc($result)) {
   <?php require_once '../../includes/components/modal/clientes/modal_edit_cliente.php'; ?>
   <?php require_once '../../includes/components/modal/modal_delete_confirm.php'; ?>
 
+  <script>
+    // Restaurar estado da sidebar imediatamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedSidebarState = localStorage.getItem('sidebarState');
+      if (savedSidebarState === 'closed') {
+        document.body.classList.add('sidebar-closed');
+      }
+    });
+  </script>
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

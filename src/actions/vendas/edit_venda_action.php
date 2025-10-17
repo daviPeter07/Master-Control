@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   try {
     // Dados principais da venda
     $venda_id = $_POST['id'];
-    $cliente_id = $_POST['cliente_id'];
+    $cliente_id = !empty($_POST['cliente_id']) ? $_POST['cliente_id'] : null;
     $metodo_pagamento = $_POST['metodo_pagamento'];
     $status_pagamento = $_POST['status_pagamento'];
 
@@ -74,6 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_rollback($conexao);
     $_SESSION['error_message'] = "Erro ao atualizar venda: " . $e->getMessage();
   }
-  header('Location: /masterControl/src/pages/dashboard/vendas.php');
+  header('Location: ../../pages/dashboard/vendas.php');
   exit();
 }

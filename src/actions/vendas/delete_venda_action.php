@@ -35,6 +35,6 @@ if (isset($_GET['id'])) {
     $_SESSION['error_message'] = "Erro ao excluir venda.";
   }
 
-  header('Location: /masterControl/src/pages/dashboard/vendas.php');
+  header('Location: ../../pages/dashboard/vendas.php');
   exit();
 }

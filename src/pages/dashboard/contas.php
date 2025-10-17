@@ -227,6 +227,15 @@ $contasPagina = mysqli_fetch_all($result, MYSQLI_ASSOC);
   require_once '../../includes/components/modal/modal_delete_confirm.php';
   ?>
 
+  <script>
+    // Restaurar estado da sidebar imediatamente
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedSidebarState = localStorage.getItem('sidebarState');
+      if (savedSidebarState === 'closed') {
+        document.body.classList.add('sidebar-closed');
+      }
+    });
+  </script>
   <script src="../../scripts/dashboard.js"></script>
 </body>
 

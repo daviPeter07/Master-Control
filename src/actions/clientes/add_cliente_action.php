@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $tipo_cliente = $_POST['tipo_cliente'];
   $telefone = trim($_POST['telefone']) ?: null; // Define como null se estiver vazio
 
-  // Validação 
+  // Validação
   if (empty($nome) || empty($tipo_cliente)) {
     $_SESSION['error_message'] = "Nome e Tipo de Cliente são obrigatórios.";
     header('Location: /masterControl/src/pages/dashboard/clientes.php');

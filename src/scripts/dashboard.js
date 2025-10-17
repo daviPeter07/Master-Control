@@ -5,6 +5,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const vendasPorDiaCtx = document.getElementById("vendasPorDiaChart");
   const vendasPorStatusCtx = document.getElementById("vendasPorStatusChart");
 
+  // Restaurar estado da sidebar
+  const savedSidebarState = localStorage.getItem("sidebarState");
+  if (savedSidebarState === "closed") {
+    body.classList.add("sidebar-closed");
+  }
+
   //Gráficos
   if (vendasPorDiaCtx) {
     new Chart(vendasPorDiaCtx, {
@@ -427,7 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Preenche os campos principais do formulário
         modal.querySelector("#edit-venda-id").value = data.id;
-        modal.querySelector("#edit-cliente_id").value = data.clienteId;
+        modal.querySelector("#edit-cliente_id").value = data.clienteId || "";
         modal.querySelector("#edit-metodo_pagamento").value = data.metodo;
         modal.querySelector("#edit-status_pagamento").value = data.status;
 
@@ -486,4 +492,234 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // Funcionalidade para produtos livres nas vendas
+  function setupProdutoLivreHandlers() {
+    // Handler para mudança de tipo de produto
+    document.addEventListener("change", function (e) {
+      if (e.target.classList.contains("produto-select")) {
+        const row = e.target.closest(".item-venda-row");
+        const produtoLivreInputs = row.querySelectorAll(".produto-livre-input");
+        const precoLivreInputs = row.querySelectorAll(".preco-livre-input");
+
+        produtoLivreInputs.forEach((produtoLivreInput) => {
+          precoLivreInputs.forEach((precoLivreInput) => {
+            if (e.target.value === "livre") {
+              produtoLivreInput.classList.remove("hidden");
+              precoLivreInput.classList.remove("hidden");
+              produtoLivreInput.required = true;
+              precoLivreInput.required = true;
+            } else {
+              produtoLivreInput.classList.add("hidden");
+              precoLivreInput.classList.add("hidden");
+              produtoLivreInput.required = false;
+              precoLivreInput.required = false;
+              produtoLivreInput.value = "";
+              precoLivreInput.value = "";
+            }
+          });
+        });
+      }
+    });
+
+    // Handler para remover itens (o handler de adicionar já existe na função principal)
+    const itemsContainer = document.getElementById("itens-venda-container");
+    if (itemsContainer) {
+      itemsContainer.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("remove-item-btn")) {
+          e.target.closest(".item-venda-row").remove();
+        }
+      });
+    }
+  }
+
+  // Inicializar handlers de produto livre
+  setupProdutoLivreHandlers();
+
+  // Inicializar handlers de cadastro rápido
+  setupQuickAddHandlers();
 });
+
+// Funcionalidade para cadastro rápido de cliente e produto
+function setupQuickAddHandlers() {
+  // Handler para botão de cadastro rápido de cliente usando event delegation
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "quick-add-cliente-btn") {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const quickClienteModal = document.getElementById(
+        "quick-add-cliente-modal"
+      );
+      if (quickClienteModal) {
+        quickClienteModal.style.display = "flex";
+        quickClienteModal.style.zIndex = "9999";
+      }
+    }
+  });
+
+  // Handlers para fechar modal de cliente
+  document.addEventListener("click", (e) => {
+    if (
+      e.target &&
+      (e.target.classList.contains("close-quick-cliente-modal-btn") ||
+        e.target.classList.contains("cancel-quick-cliente-modal-btn"))
+    ) {
+      const quickClienteModal = document.getElementById(
+        "quick-add-cliente-modal"
+      );
+      const quickClienteForm = document.getElementById("quick-cliente-form");
+      if (quickClienteModal) {
+        quickClienteModal.style.display = "none";
+        if (quickClienteForm) {
+          quickClienteForm.reset();
+        }
+      }
+    }
+  });
+
+  // Handler para formulário de cliente
+  document.addEventListener("submit", async (e) => {
+    if (e.target && e.target.id === "quick-cliente-form") {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      formData.append("action", "quick_add_cliente");
+
+      try {
+        const response = await fetch(
+          "../../../src/actions/quick_add_action.php",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Adicionar novo cliente ao select
+          const clienteSelect = document.getElementById("cliente-select");
+          if (clienteSelect) {
+            const newOption = document.createElement("option");
+            newOption.value = result.cliente.id;
+            newOption.textContent = result.cliente.nome;
+            clienteSelect.appendChild(newOption);
+
+            // Selecionar o novo cliente
+            clienteSelect.value = result.cliente.id;
+          }
+
+          // Fechar modal e mostrar sucesso
+          const quickClienteModal = document.getElementById(
+            "quick-add-cliente-modal"
+          );
+          if (quickClienteModal) {
+            quickClienteModal.style.display = "none";
+            e.target.reset();
+          }
+
+          // Sucesso - modal já foi fechado
+        } else {
+          // Erro no cadastro
+        }
+      } catch (error) {
+        // Erro na requisição
+      }
+    }
+  });
+
+  // Handler para botões de cadastro rápido de produto
+  document.addEventListener("click", (e) => {
+    if (e.target && e.target.classList.contains("quick-add-produto-btn")) {
+      e.preventDefault();
+      const quickProdutoModal = document.getElementById(
+        "quick-add-produto-modal"
+      );
+      if (quickProdutoModal) {
+        quickProdutoModal.style.display = "flex";
+      } else {
+        // Modal não encontrado
+      }
+    }
+  });
+
+  // Handlers para fechar modal de produto
+  document.addEventListener("click", (e) => {
+    if (
+      e.target &&
+      (e.target.classList.contains("close-quick-produto-modal-btn") ||
+        e.target.classList.contains("cancel-quick-produto-modal-btn"))
+    ) {
+      const quickProdutoModal = document.getElementById(
+        "quick-add-produto-modal"
+      );
+      const quickProdutoForm = document.getElementById("quick-produto-form");
+      if (quickProdutoModal) {
+        quickProdutoModal.style.display = "none";
+        if (quickProdutoForm) {
+          quickProdutoForm.reset();
+        }
+      }
+    }
+  });
+
+  // Handler para formulário de produto
+  document.addEventListener("submit", async (e) => {
+    if (e.target && e.target.id === "quick-produto-form") {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      formData.append("action", "quick_add_produto");
+
+      try {
+        const response = await fetch(
+          "../../../src/actions/quick_add_action.php",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const result = await response.json();
+
+        if (result.success) {
+          // Adicionar novo produto aos selects de produto
+          const produtoSelects = document.querySelectorAll(".produto-select");
+          produtoSelects.forEach((select) => {
+            const newOption = document.createElement("option");
+            newOption.value = result.produto.id;
+            newOption.textContent = result.produto.nome;
+            newOption.setAttribute("data-preco", result.produto.valor_venda);
+            select.appendChild(newOption);
+          });
+
+          // Selecionar o novo produto no último select adicionado
+          const lastProdutoSelect = produtoSelects[produtoSelects.length - 1];
+          if (lastProdutoSelect) {
+            lastProdutoSelect.value = result.produto.id;
+          }
+
+          // Fechar modal e mostrar sucesso
+          const quickProdutoModal = document.getElementById(
+            "quick-add-produto-modal"
+          );
+          if (quickProdutoModal) {
+            console.log("Fechando modal de produto...");
+            quickProdutoModal.style.display = "none";
+            e.target.reset();
+            console.log("Modal de produto fechado e formulário resetado");
+          } else {
+            console.log("Modal de produto não encontrado para fechar");
+          }
+
+          // Sucesso - modal já foi fechado
+        } else {
+          // Erro no cadastro
+        }
+      } catch (error) {
+        // Erro na requisição
+      }
+    }
+  });
+}
