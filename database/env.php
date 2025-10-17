@@ -1,7 +1,7 @@
 <?php
 return [
-  'db_password' => $_ENV['DB_PASS'] ?? 'Info@1234',
+  'db_password' => $_ENV['DB_PASS'] ?? 'rNLsUvaQOREujovGKwYhRnbAXsBfqojD',
   'db_user' => $_ENV['DB_USER'] ?? 'root',
-  'db_server' => $_ENV['DB_HOST'] ?? 'localhost',
-  'db_name' => $_ENV['DB_NAME'] ?? 'mastercontrol',
+  'db_server' => $_ENV['DB_HOST'] ?? 'mysql.railway.internal',
+  'db_name' => $_ENV['DB_NAME'] ?? 'railway',
 ];
