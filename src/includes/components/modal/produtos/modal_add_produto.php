@@ -38,18 +38,22 @@
           <label for="marca_id" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Marca</label>
           <select name="marca_id" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <option value="">Nenhuma</option>
-            <?php foreach ($marcas as $marca): ?>
-              <option value="<?= $marca['id'] ?>"><?= htmlspecialchars($marca['nome']) ?></option>
-            <?php endforeach; ?>
+            <?php if (!empty($marcas)): ?>
+              <?php foreach ($marcas as $marca): ?>
+                <option value="<?= $marca['id'] ?>"><?= htmlspecialchars($marca['nome']) ?></option>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </select>
         </div>
         <div>
           <label for="categoria_id" class="block text-sm font-medium text-[var(--color-text-secondary)] mb-1">Categoria</label>
           <select name="categoria_id" class="w-full p-2 border border-[var(--color-border)] rounded-lg bg-[var(--color-background)] text-[var(--color-text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]">
             <option value="">Nenhuma</option>
-            <?php foreach ($categorias as $categoria): ?>
-              <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
-            <?php endforeach; ?>
+            <?php if (!empty($categorias)): ?>
+              <?php foreach ($categorias as $categoria): ?>
+                <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['nome']) ?></option>
+              <?php endforeach; ?>
+            <?php endif; ?>
           </select>
         </div>
       </div>

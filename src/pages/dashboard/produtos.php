@@ -3,13 +3,19 @@ require_once '../../includes/auth_check.php';
 require_once '../../../database/index.php';
 $currentPage = 'produtos';
 
-// Busca todas as marcas para preencher os <select>
+// Busca todas as marcas para preencher os <select> (opcional)
+$marcas = [];
 $marcasResult = mysqli_query($conexao, "SELECT id, nome FROM marcas ORDER BY nome ASC");
-$marcas = mysqli_fetch_all($marcasResult, MYSQLI_ASSOC);
+if ($marcasResult) {
+    $marcas = mysqli_fetch_all($marcasResult, MYSQLI_ASSOC);
+}
 
-// Busca todas as categorias para preencher os <select>
+// Busca todas as categorias para preencher os <select> (opcional)
+$categorias = [];
 $categoriasResult = mysqli_query($conexao, "SELECT id, nome FROM categorias ORDER BY nome ASC");
-$categorias = mysqli_fetch_all($categoriasResult, MYSQLI_ASSOC);
+if ($categoriasResult) {
+    $categorias = mysqli_fetch_all($categoriasResult, MYSQLI_ASSOC);
+}
 
 // Paginação
 $itensPorPagina = 5;
@@ -24,12 +30,8 @@ $inicio = ($paginaAtual - 1) * $itensPorPagina;
 $produtosPaginaSql = "
   SELECT
     p.id, p.nome, p.descricao, p.valor_custo, p.valor_venda, p.quantidade, p.genero,
-    p.marca_id, p.categoria_id,
-    m.nome AS marca_nome,
-    c.nome AS categoria_nome
+    p.marca_id, p.categoria_id
   FROM produtos p
-  LEFT JOIN marcas m ON p.marca_id = m.id
-  LEFT JOIN categorias c ON p.categoria_id = c.id
   ORDER BY p.nome ASC
   LIMIT ?, ?
 ";

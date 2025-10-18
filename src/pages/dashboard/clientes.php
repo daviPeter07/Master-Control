@@ -21,7 +21,7 @@ $paginaAtual = isset($_GET['pagina']) ? max(1, min((int)$_GET['pagina'], $totalP
 $inicio = ($paginaAtual - 1) * $itensPorPagina;
 
 // Query para buscar os clientes da página atual usando prepared statements
-$clientesPaginaSql = "SELECT id, nome, tipo_cliente, telefone, criado_em FROM clientes ORDER BY nome ASC LIMIT ?, ?";
+$clientesPaginaSql = "SELECT id, nome, tipo_cliente, telefone, data_cadastro FROM clientes ORDER BY nome ASC LIMIT ?, ?";
 
 // Prepara, executa e busca os resultados
 $stmt = mysqli_prepare($conexao, $clientesPaginaSql);
@@ -97,7 +97,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     Telefone: <?= htmlspecialchars($cliente['telefone'] ?? 'N/A') ?>
                   </p>
                   <p class="text-sm text-[var(--color-text-secondary)]">
-                    Cliente desde: <?= date('d/m/Y', strtotime($cliente['criado_em']) ?? 'N/A') ?>
+                    Cliente desde: <?= date('d/m/Y', strtotime($cliente['data_cadastro']) ?? 'N/A') ?>
                   </p>
 
                   <!--Actions mobile-->
@@ -149,7 +149,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                         <?= htmlspecialchars($cliente['telefone'] ?? 'N/A') ?>
                       </td>
                       <td class="p-3 text-[var(--color-text-secondary)]">
-                        <?= date('d/m/Y', strtotime($cliente['criado_em']) ?? 'N/A') ?>
+                        <?= date('d/m/Y', strtotime($cliente['data_cadastro']) ?? 'N/A') ?>
                       </td>
 
                       <td class="p-3 flex gap-2">
